@@ -138,8 +138,8 @@ Rutas privadas:
 
 Roles previstos:
 
-- `admin`
-- `jurado`
+- `ADMIN`
+- `JURADO`
 
 Fuente de rol para esta issue:
 
@@ -147,27 +147,29 @@ Fuente de rol para esta issue:
 
 Valores válidos:
 
-- `admin`
-- `jurado`
+- `ADMIN`
+- `JURADO`
 
 No utilizar `user_metadata.role` como fuente de autorización.
 
 ## Reglas de autorización
+
+La política de acceso fue confirmada por el líder del proyecto.
 
 Usuario no autenticado:
 
 - `/admin`  -> redirigir a `/login`
 - `/jurado` -> redirigir a `/login`
 
-Usuario con rol admin:
+Usuario con rol `ADMIN`:
 
 - `/admin`  -> permitir
-- `/jurado` -> denegar o redirigir según política acordada
+- `/jurado` -> denegar
 
-Usuario con rol jurado:
+Usuario con rol `JURADO`:
 
 - `/jurado` -> permitir
-- `/admin`  -> denegar o redirigir según política acordada
+- `/admin`  -> denegar
 
 Usuario autenticado sin rol válido:
 
@@ -284,15 +286,17 @@ Fase 0 completada:
 - 0.1 - misma base del repositorio
 - 0.2 - baseline local verificado
 - 0.3 - variables apuntando a Supabase DEV
+- 0.4 - usuarios de prueba creados y confirmados en Supabase DEV
+- 0.5 - contrato de roles aprobado: `ADMIN` y `JURADO`
 
 Siguiente paso:
 
-- 0.4 - crear/preparar usuarios de prueba en Supabase DEV
+- 0.6 - asignar `app_metadata.role` a los usuarios de prueba en Supabase DEV
 
 Usuarios DEV mínimos:
 
-- `admin`  -> `app_metadata.role = "admin"`
-- `jurado` -> `app_metadata.role = "jurado"`
+- `ADMIN`  -> `app_metadata.role = "ADMIN"`
+- `JURADO` -> `app_metadata.role = "JURADO"`
 
 No colocar emails, contraseñas, tokens ni IDs reales dentro de este archivo.
 
