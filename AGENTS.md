@@ -279,26 +279,13 @@ npm run build
 
 No afirmar que una tarea está completa si alguno falla.
 
-## Estado actual
+## Seguimiento de la issue
 
-Fase 0 completada:
+El estado y el desglose incremental del trabajo asignado a John se registran en:
 
-- 0.1 - misma base del repositorio
-- 0.2 - baseline local verificado
-- 0.3 - variables apuntando a Supabase DEV
-- 0.4 - usuarios de prueba creados y confirmados en Supabase DEV
-- 0.5 - contrato de roles aprobado: `ADMIN` y `JURADO`
+- `docs/auth-ssr-progress.md`
 
-Siguiente paso:
-
-- 0.6 - asignar `app_metadata.role` a los usuarios de prueba en Supabase DEV
-
-Usuarios DEV mínimos:
-
-- `ADMIN`  -> `app_metadata.role = "ADMIN"`
-- `JURADO` -> `app_metadata.role = "JURADO"`
-
-No colocar emails, contraseñas, tokens ni IDs reales dentro de este archivo.
+No colocar emails, contraseñas, tokens ni IDs reales en la documentación de seguimiento.
 
 ## Objetivo final de la issue
 
