@@ -3,14 +3,13 @@
  * Los valores no confirmados por negocio se dejan como placeholders {{...}}.
  */
 
-// Fecha de cierre de inscripciones — placeholder editable {{FECHA_CIERRE}}
-// Se usa una fecha futura de marcador para que el countdown funcione en preview.
-export const REGISTRATION_CLOSE_ISO = '2026-03-31T23:59:00-05:00'
-export const REGISTRATION_CLOSE_LABEL = '{{FECHA_CIERRE}}'
+export const REGISTRATION_CLOSE_ISO = '2027-02-08T23:59:59-05:00'
+export const REGISTRATION_CLOSE_LABEL = 'Lunes 8 de febrero de 2027 · 23:59'
 
 export const NAV_LINKS = [
   { label: 'Inicio', href: '#inicio' },
-  { label: 'Sobre el Reto', href: '#sobre-el-reto' },
+  { label: 'Sobre el reto', href: '#about' },
+  { label: 'Ganadores', href: '#ganadores' },
   { label: 'Cronograma', href: '#cronograma' },
   { label: 'Matchmaking', href: '#matchmaking' },
   { label: 'FAQ', href: '#faq' },
@@ -18,11 +17,7 @@ export const NAV_LINKS = [
 
 export const ROUTES = {
   registro: '/registro',
-  login: '/login',
   matchmaking: '/registro?flow=matchmaking',
-  portalEntregables: '/portal',
-  accesoJurado: '/login?role=jurado',
-  accesoAdmin: '/login?role=admin',
 }
 
 // Etapas globales de Hult Prize (lenguaje propio UNICode)
@@ -59,57 +54,121 @@ export const GLOBAL_STAGES = [
   },
 ] as const
 
-// Cronograma local HP at UNI (fechas públicas = placeholders {{FASE_X_FECHA}})
 export const LOCAL_PHASES = [
   {
     key: 'fase-1',
     phase: 'Fase 1',
+    image: '/fotos/crono-fase1.webp',
     title: 'Convocar e Inscribir',
-    date: '{{FASE_1_FECHA}}',
-    body: 'Se abre la convocatoria oficial. Los equipos se registran en la plataforma y confirman a sus integrantes.',
+    dateRange: 'Por confirmar',
+    body: 'Presenta tu propuesta y registra a las personas de tu equipo para participar en la edición 2027.',
+    details: 'Registra a las personas postulantes y presenta el problema que el equipo quiere abordar. Las bases oficiales definirán los requisitos y las fechas de apertura y cierre.',
   },
   {
     key: 'fase-2',
     phase: 'Fase 2',
-    title: 'Bootcamps y Mentores',
-    date: '{{FASE_2_FECHA}}',
-    body: 'Sesiones de formación, mentoría técnica y de negocio para dar forma a cada propuesta.',
+    image: '/fotos/crono-fase2.webp',
+    title: 'Formación y mentorías',
+    dateRange: 'Por confirmar',
+    body: 'Fortalece la propuesta con herramientas de emprendimiento, validación y mentoría especializada.',
+    details: 'Participa en sesiones de formación y mentoría para validar el problema, contrastar la solución con usuarios y preparar un modelo de emprendimiento sostenible.',
   },
   {
     key: 'fase-3',
     phase: 'Fase 3',
-    title: 'Entrega de Pitches y Evaluación',
-    date: '{{FASE_3_FECHA}}',
-    body: 'Los equipos suben sus entregables a la plataforma y el jurado evalúa mediante rúbricas.',
+    image: '/fotos/crono-fase3.webp',
+    title: 'Presentación y evaluación',
+    dateRange: 'Por confirmar',
+    body: 'Expón el problema, la solución propuesta y el potencial de impacto de tu emprendimiento.',
+    details: 'Entrega la presentación y los materiales solicitados en las bases. El jurado evaluará cada propuesta con los criterios y la rúbrica publicados para la edición.',
   },
   {
     key: 'fase-4',
     phase: 'Fase 4',
-    title: 'Gran Final On-Campus UNI',
-    date: '{{FASE_4_FECHA}}',
-    body: 'La final presencial en el campus de la UNI. Se define al equipo que representará a la casa de estudios.',
+    image: '/fotos/crono-fase4.webp',
+    title: 'Final en la UNI',
+    dateRange: 'Por confirmar',
+    body: 'Los equipos finalistas presentan sus propuestas ante el jurado de la sede UNI.',
+    details: 'Los equipos finalistas presentan su propuesta en la sede UNI. El formato, la fecha y los criterios de selección se confirmarán en el cronograma oficial.',
   },
 ] as const
 
+export const WINNERS_2026 = [
+  {
+    place: '1.er puesto',
+    name: 'Nombre por confirmar',
+    project: 'Proyecto por confirmar',
+    description: 'La descripción oficial del proyecto se añadirá al publicarse los resultados.',
+    photo: '/fotos/ganador-1.webp',
+    linkedinUrl: '',
+  },
+  {
+    place: '2.º puesto',
+    name: 'Nombre por confirmar',
+    project: 'Proyecto por confirmar',
+    description: 'La descripción oficial del proyecto se añadirá al publicarse los resultados.',
+    photo: '/fotos/ganador-2.webp',
+    linkedinUrl: '',
+  },
+  {
+    place: '3.er puesto',
+    name: 'Nombre por confirmar',
+    project: 'Proyecto por confirmar',
+    description: 'La descripción oficial del proyecto se añadirá al publicarse los resultados.',
+    photo: '/fotos/ganador-3.webp',
+    linkedinUrl: '',
+  },
+] as const
+
+export const BOOTCAMP_MODULES = [
+  {
+    number: '01',
+    title: 'Problema e impacto',
+    body: 'Delimita el desafío, identifica a las personas afectadas y define cómo medir el impacto.',
+  },
+  {
+    number: '02',
+    title: 'Validación de solución',
+    body: 'Contrasta hipótesis con usuarios y convierte hallazgos en una propuesta de valor.',
+  },
+  {
+    number: '03',
+    title: 'Modelo de negocio',
+    body: 'Diseña una operación sostenible, estima costos y plantea una ruta de crecimiento.',
+  },
+  {
+    number: '04',
+    title: 'Pitch y presentación',
+    body: 'Comunica evidencia, viabilidad y resultados esperados con claridad ante el jurado.',
+  },
+] as const
+
+export const CONTACT_CHANNELS = {
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? '',
+  instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL ?? '',
+  linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL ?? '',
+  whatsapp: process.env.NEXT_PUBLIC_WHATSAPP_URL ?? '',
+} as const
+
 export const FAQ_ITEMS = [
   {
-    q: '¿En qué formatos subo mis entregables?',
-    a: 'A través del Portal de Participantes podrás subir documentos en PDF y DOCX, además de enlaces a tu pitch en video. El jurado califica cada entregable con rúbricas dentro de la misma plataforma.',
+    q: '¿Cuál es el reto de la edición 2027?',
+    a: 'El reto invita a estudiantes a desarrollar emprendimientos sostenibles que respondan a desafíos sociales y ambientales. La convocatoria oficial de 2027 precisará el enfoque y sus criterios.',
   },
   {
     q: '¿Cuál es la fecha límite de inscripción?',
-    a: 'El cierre de inscripciones está programado para {{FECHA_CIERRE}}. El contador de la parte superior se actualiza automáticamente hacia esa fecha.',
+    a: 'La fecha oficial de cierre se anunciará próximamente. El cronograma de esta página se actualizará cuando la organización confirme el calendario.',
   },
   {
-    q: '¿Tendré acompañamiento de mentores?',
-    a: 'Sí. Durante la fase de Bootcamps y Mentores tu equipo recibirá acompañamiento técnico y de negocio para robustecer la propuesta antes de la evaluación.',
+    q: '¿Puedo postular si todavía no tengo equipo?',
+    a: 'Sí. Puedes registrarte de forma individual y usar el espacio de Matchmaking para encontrar personas con intereses y habilidades complementarias.',
   },
   {
-    q: '¿Quién conforma el jurado?',
-    a: 'El jurado se anunciará oficialmente próximamente ({{JURADO}}). Estará integrado por perfiles de ingeniería, academia, industria e inversión de impacto.',
+    q: '¿Quiénes pueden participar?',
+    a: 'La convocatoria está dirigida a estudiantes que quieran desarrollar una propuesta de emprendimiento de impacto. Los requisitos oficiales se publicarán junto con las bases 2027.',
   },
   {
     q: '¿Necesito una idea terminada para inscribirme?',
-    a: 'No. Puedes inscribirte con una hipótesis de problema. Las fases de formación existen precisamente para convertir esa hipótesis en una solución escalable.',
+    a: 'No necesitas tener una empresa constituida. Puedes empezar con una hipótesis de problema y trabajar la propuesta durante las etapas de la competencia.',
   },
 ] as const

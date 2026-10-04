@@ -1,87 +1,86 @@
-import { CalendarClock } from 'lucide-react'
-import { SectionHeading } from '@/components/section-heading'
-import { GLOBAL_STAGES, LOCAL_PHASES } from '@/lib/site-config'
+ 'use client';
 
-export function StagesSection() {
-  return (
-    <section
-      id="cronograma"
-      className="bg-brand-navy/25 py-20 sm:py-28"
-    >
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+ import Image from 'next/image'
+ import { useRef } from 'react'
+ import { SectionHeading } from '@/components/section-heading'
+ import { LOCAL_PHASES } from '@/lib/site-config'
+
+ export function StagesSection() {
+   const carouselRef = useRef<HTMLOListElement>(null)
+
+   function scrollCarousel(direction: -1 | 1) {
+     carouselRef.current?.scrollBy({
+       left: direction * 384,
+       behavior: 'smooth',
+     })
+   }
+
+   return (
+     <section
+       id="cronograma"
+       className="bg-brand-navy/25 py-20 sm:py-28"
+     >
+       <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <SectionHeading
-          eyebrow="Cómo funciona la competencia"
-          title="Cinco etapas globales. Cuatro fases en el campus."
-          description="El camino de Hult Prize es internacional, pero tu recorrido empieza aquí, en la UNI. Primero conquistas el campus; luego escalas al mundo."
+          eyebrow="Cronograma 2027"
+          title="Un recorrido para llevar tu propuesta a la final."
+          description="El programa avanza desde la inscripción y la formación hasta la presentación de tu propuesta. Desliza para recorrer sus cuatro etapas; las fechas se confirmarán con el calendario oficial."
         />
 
-        {/* Etapas globales */}
-        <div className="mt-12">
-          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-cyan">
-            Ruta global de Hult Prize
-          </h3>
-          <ol className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-            {GLOBAL_STAGES.map((stage, i) => (
-              <li
-                key={stage.key}
-                className="relative flex flex-col rounded-xl border border-white/10 bg-white/[0.03] p-5"
+        <div className="mt-10 overflow-hidden">
+          <div className="mb-4 flex justify-end gap-2">
+            {([-1, 1] as const).map((direction) => (
+              <button
+                key={direction}
+                type="button"
+                aria-label={direction < 0 ? 'Ver etapa anterior' : 'Ver etapa siguiente'}
+                onClick={() => scrollCarousel(direction)}
+                className="flex size-11 items-center justify-center rounded-full border border-white/15 bg-black transition-colors hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
               >
-                <span className="font-mono text-xs font-semibold text-brand-pink">
-                  {stage.tag}
-                </span>
-                <span className="mt-2 text-lg font-semibold text-white">
-                  {stage.title}
-                </span>
-                <span className="mt-2 text-sm leading-relaxed text-white/60">
-                  {stage.body}
-                </span>
-                {i < GLOBAL_STAGES.length - 1 ? (
-                  <span
-                    aria-hidden="true"
-                    className="absolute -right-2 top-1/2 hidden h-px w-4 -translate-y-1/2 bg-gradient-to-r from-brand-pink/60 to-transparent lg:block"
-                  />
-                ) : null}
-              </li>
+                <Image
+                  src="/logos/Diseño sin título (9).jpg"
+                  alt=""
+                  width={391}
+                  height={117}
+                  className={`h-5 w-[4.2rem] invert ${direction < 0 ? 'scale-x-[-1]' : ''}`}
+                  loading="lazy"
+                />
+              </button>
             ))}
-          </ol>
-        </div>
-
-        {/* Cronograma local */}
-        <div className="mt-16">
-          <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-cyan">
-            Tu recorrido en HP at UNI
-          </h3>
-          <ol className="mt-6 space-y-4">
+          </div>
+          <ol
+            ref={carouselRef}
+            className="flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain scroll-smooth pb-5"
+          >
             {LOCAL_PHASES.map((phase) => (
               <li
                 key={phase.key}
-                className="flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:flex-row sm:items-center sm:gap-6"
+                className="w-[min(84vw,22rem)] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] sm:w-[22rem]"
               >
-                <div className="flex size-14 shrink-0 items-center justify-center rounded-xl bg-brand-pink/15 text-lg font-bold text-brand-pink-3 ring-1 ring-brand-pink/30">
-                  {phase.phase.replace('Fase ', 'F')}
+                <div className="relative aspect-[16/10] overflow-hidden bg-[#201d2e]">
+                  <Image
+                    src={phase.image}
+                    alt={`Ilustración de ${phase.phase}: ${phase.title}`}
+                    width={880}
+                    height={550}
+                    loading="lazy"
+                    sizes="(max-width: 640px) 84vw, 22rem"
+                    className="absolute inset-0 h-full w-full object-cover"
+                  />
+                  <span className="absolute left-4 top-4 rounded-full bg-brand-pink px-3 py-1 text-xs font-bold text-white">
+                    {phase.phase}
+                  </span>
                 </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-3">
-                    <h4 className="text-lg font-semibold text-white">
-                      {phase.title}
-                    </h4>
-                    {/* Fecha crítica destacada, nunca texto plano */}
-                    <span className="inline-flex items-center gap-1.5 rounded-full border border-brand-yellow/40 bg-brand-yellow/10 px-3 py-1 font-mono text-xs font-semibold text-brand-yellow">
-                      <CalendarClock className="size-3.5" aria-hidden="true" />
-                      {phase.date}
-                    </span>
-                  </div>
-                  <p className="mt-2 text-sm leading-relaxed text-white/65">
-                    {phase.body}
+                <div className="p-5 sm:p-6">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-cyan">
+                    {phase.dateRange}
                   </p>
+                  <h3 className="mt-2 text-xl font-bold text-white">{phase.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-white/65">{phase.body}</p>
                 </div>
               </li>
             ))}
           </ol>
-          <p className="mt-4 text-xs text-white/40">
-            Las fechas públicas de cada fase se confirmarán próximamente y se
-            actualizarán desde el gestor de contenidos.
-          </p>
         </div>
       </div>
     </section>

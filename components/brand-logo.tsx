@@ -31,7 +31,7 @@ export function BrandLogo({ className }: { className?: string }) {
           Hult Prize
         </span>
         <span className="text-[0.68rem] font-medium tracking-[0.18em] text-brand-pink-3">
-          at UNI 2026
+          at UNI 2027
         </span>
       </span>
     </span>

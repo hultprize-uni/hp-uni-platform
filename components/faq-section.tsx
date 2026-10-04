@@ -10,7 +10,7 @@ import { FAQ_ITEMS } from '@/lib/site-config'
 export function FaqSection() {
   return (
     <section id="faq" className="bg-brand-navy/25 py-20 sm:py-28">
-      <div className="mx-auto max-w-3xl px-5 sm:px-8">
+      <div className="mx-auto max-w-3xl px-4 sm:px-8">
         <SectionHeading
           align="center"
           eyebrow="Preguntas frecuentes"

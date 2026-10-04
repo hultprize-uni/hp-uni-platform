@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Menu, LogIn, Shield } from 'lucide-react'
+import { Menu } from 'lucide-react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import {
   Sheet,
@@ -12,32 +12,21 @@ import {
   SheetTrigger,
   SheetClose,
 } from '@/components/ui/sheet'
-import { BrandLogo } from '@/components/brand-logo'
 import { NAV_LINKS, ROUTES } from '@/lib/site-config'
-import { cn } from '@/lib/utils'
 
 export function SiteHeader() {
-  const [scrolled, setScrolled] = useState(false)
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
   return (
-    <header
-      className={cn(
-        'fixed inset-x-0 top-0 z-50 transition-colors duration-300',
-        scrolled
-          ? 'border-b border-white/10 bg-brand-ink/85 backdrop-blur-md'
-          : 'border-b border-transparent',
-      )}
-    >
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8">
-        <Link href="#inicio" aria-label="Hult Prize at UNI 2026 — Inicio">
-          <BrandLogo />
+    <header className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-[#191919]/80 shadow-[0_4px_20px_rgba(234,72,153,0.15)] backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-8">
+        <Link href="#inicio" aria-label="Hult Prize at UNI 2027 — Inicio">
+          <Image
+            src="/logos/Diseño sin título.jpg"
+            alt="Hult Prize at UNI 2027"
+            width={258}
+            height={95}
+            priority
+            className="h-12 w-auto"
+          />
         </Link>
 
         <nav aria-label="Navegación principal" className="hidden lg:block">
@@ -57,20 +46,11 @@ export function SiteHeader() {
 
         <div className="hidden items-center gap-2 lg:flex">
           <Button
-            render={<Link href={ROUTES.login} />}
-            nativeButton={false}
-            variant="ghost"
-            className="text-white/80 hover:bg-white/10 hover:text-white"
-          >
-            <LogIn className="size-4" aria-hidden="true" />
-            Iniciar Sesión
-          </Button>
-          <Button
             render={<Link href={ROUTES.registro} />}
             nativeButton={false}
-            className="bg-brand-pink text-white hover:bg-brand-pink-2"
+            className="bg-gradient-to-r from-[#ea4899] to-[#8a2899] text-white hover:brightness-110"
           >
-            Inscribir Equipo
+            Inscríbete aquí
           </Button>
         </div>
 
@@ -95,7 +75,14 @@ export function SiteHeader() {
             >
               <SheetHeader>
                 <SheetTitle className="text-left text-white">
-                  <BrandLogo />
+                  <Image
+                    src="/logos/Diseño sin título.jpg"
+                    alt="Hult Prize at UNI 2027"
+                    width={258}
+                    height={95}
+                    className="h-12 w-auto"
+                    loading="lazy"
+                  />
                 </SheetTitle>
               </SheetHeader>
               <nav aria-label="Navegación móvil" className="mt-2 px-4">
@@ -103,6 +90,7 @@ export function SiteHeader() {
                   {NAV_LINKS.map((link) => (
                     <li key={link.href}>
                       <SheetClose
+                        nativeButton={false}
                         render={
                           <a
                             href={link.href}
@@ -119,38 +107,25 @@ export function SiteHeader() {
               <div className="mt-auto flex flex-col gap-3 p-4">
                 <Button
                   render={
-                    <SheetClose render={<Link href={ROUTES.registro} />} />
-                  }
-                  nativeButton={false}
-                  className="w-full bg-brand-pink text-white hover:bg-brand-pink-2"
-                >
-                  Inscribir Equipo
-                </Button>
-                <Button
-                  render={<SheetClose render={<Link href={ROUTES.login} />} />}
-                  nativeButton={false}
-                  variant="outline"
-                  className="w-full border-white/20 bg-transparent text-white hover:bg-white/10"
-                >
-                  <LogIn className="size-4" aria-hidden="true" />
-                  Iniciar Sesión
-                </Button>
-                <SheetClose
-                  render={
-                    <Link
-                      href={ROUTES.accesoJurado}
-                      className="flex items-center justify-center gap-2 rounded-md py-2 text-sm text-white/60 transition-colors hover:text-brand-cyan"
+                    <SheetClose
+                      nativeButton={false}
+                      render={<Link href={ROUTES.registro} />}
                     />
                   }
+                  nativeButton={false}
+                  className="w-full bg-gradient-to-r from-[#ea4899] to-[#8a2899] text-white hover:brightness-110"
                 >
-                  <Shield className="size-4" aria-hidden="true" />
-                  Acceso Jurado / Admin
-                </SheetClose>
+                  Inscríbete aquí
+                </Button>
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </div>
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-[#12d8e8]/0 via-[#ea4899]/80 to-[#8a2899]/0"
+      />
     </header>
   )
 }

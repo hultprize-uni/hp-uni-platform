@@ -9,9 +9,9 @@ const spaceGrotesk = Space_Grotesk({
 })
 
 export const metadata: Metadata = {
-  title: 'Hult Prize at UNI 2026 — Ingeniería que resuelve el mundo',
+  title: 'Hult Prize at UNI 2027 — Emprendimiento de impacto',
   description:
-    'La competencia global de emprendimiento social llega a la Universidad Nacional de Ingeniería. Inscribe tu equipo (1-4 integrantes), encuentra tu squad y construye soluciones de impacto con el sello UNICode.',
+    'Transforma tus ideas en startups de impacto global desde la Universidad Nacional de Ingeniería. Participa en Hult Prize at UNI 2027.',
   generator: 'v0.app',
   keywords: [
     'Hult Prize',
@@ -19,12 +19,11 @@ export const metadata: Metadata = {
     'Universidad Nacional de Ingeniería',
     'emprendimiento social',
     'UNICode',
-    '2026',
+    '2027',
   ],
   openGraph: {
-    title: 'Hult Prize at UNI 2026',
-    description:
-      'Ingeniería y ciencia de la UNI resolviendo retos globales. Inscribe tu equipo.',
+    title: 'Hult Prize at UNI 2027',
+    description: 'Transforma tus ideas en startups de impacto global desde la UNI.',
     type: 'website',
   },
   icons: {
@@ -57,7 +56,7 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="es" className={`dark ${spaceGrotesk.variable}`}>
+    <html lang="es" className={`dark ${spaceGrotesk.variable} scroll-smooth scroll-pt-20`}>
       <body className="antialiased">{children}</body>
     </html>
   )

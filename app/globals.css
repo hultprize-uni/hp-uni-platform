@@ -4,7 +4,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Hult Prize at UNI 2026 — Brand tokens (Manual de Marca oficial) */
+@keyframes marquee-right {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.animate-marquee-right {
+  animation: marquee-right 48s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee-right {
+    animation: none;
+  }
+}
+
+/* Hult Prize at UNI — brand tokens */
 @theme {
   --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
 
@@ -14,7 +33,7 @@
   --color-brand-pink-3: #f384bc;
   --color-brand-pink-4: #f0b3d2;
   --color-brand-pink-5: #f3d5e4;
-  --color-brand-purple: #8a2890;
+  --color-brand-purple: #8a2899;
   --color-brand-navy: #292563;
   --color-brand-cyan: #12b1e7;
   --color-brand-yellow: #fdd40e;
@@ -178,11 +197,4 @@
     @apply bg-background text-foreground;
   }
 
-  [class*='rounded-'] {
-    border-radius: 0.2rem !important;
-  }
-
-  .rounded-full {
-    border-radius: 0.2rem !important;
-  }
 }

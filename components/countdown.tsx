@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useEffect, useState } from 'react'
 
@@ -31,9 +31,13 @@ export function Countdown({ targetIso }: { targetIso: string }) {
   const [time, setTime] = useState<TimeLeft | null>(null)
 
   useEffect(() => {
-    setTime(diff(target))
-    const id = setInterval(() => setTime(diff(target)), 1000)
-    return () => clearInterval(id)
+    const update = () => setTime(diff(target))
+    const initialUpdateId = window.setTimeout(update, 0)
+    const intervalId = window.setInterval(update, 1000)
+    return () => {
+      window.clearTimeout(initialUpdateId)
+      window.clearInterval(intervalId)
+    }
   }, [target])
 
   return (
@@ -45,7 +49,7 @@ export function Countdown({ targetIso }: { targetIso: string }) {
       {UNITS.map((unit) => (
         <div
           key={unit.key}
-          className="flex min-w-[4.25rem] flex-col items-center rounded-xl border border-white/10 bg-white/5 px-3 py-3 backdrop-blur-sm sm:min-w-[5rem]"
+          className="flex min-w-[3.5rem] flex-col items-center rounded-xl border border-white/10 bg-white/5 px-2 py-3 backdrop-blur-sm sm:min-w-[5rem] sm:px-3"
         >
           <span className="font-mono text-2xl font-bold tabular-nums text-white sm:text-3xl">
             {time ? String(time[unit.key]).padStart(2, '0') : '--'}

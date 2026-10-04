@@ -19,16 +19,16 @@ const REQUIREMENTS = [
   },
   {
     icon: Target,
-    title: 'Alineado al Reto Global 2026',
-    body: 'La propuesta debe responder al desafío global de la edición 2026 con foco en impacto medible.',
-    highlight: 'Reto 2026',
+    title: 'Alineado al Reto Global 2027',
+    body: 'La propuesta debe responder al reto global de 2027. El enfoque oficial se publicará con las bases de la edición.',
+    highlight: 'Reto 2027',
   },
 ]
 
 export function RequirementsSection() {
   return (
     <section className="bg-brand-navy/25 py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-5 sm:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-8">
         <SectionHeading
           eyebrow="Requisitos de participación"
           title="Antes de inscribirte, revisa la letra clara."
