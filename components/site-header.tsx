@@ -44,16 +44,6 @@ export function SiteHeader() {
           </ul>
         </nav>
 
-        <div className="hidden items-center gap-2 lg:flex">
-          <Button
-            render={<Link href={ROUTES.registro} />}
-            nativeButton={false}
-            className="bg-gradient-to-r from-[#ea4899] to-[#8a2899] text-white hover:brightness-110"
-          >
-            Inscríbete aquí
-          </Button>
-        </div>
-
         {/* Mobile */}
         <div className="lg:hidden">
           <Sheet>
