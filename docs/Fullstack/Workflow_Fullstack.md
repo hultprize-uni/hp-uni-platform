@@ -8,7 +8,7 @@
 
 ---
 
-## 🏗️ Arquitectura y Flujo Técnico del Módulo
+## Arquitectura y Flujo Técnico del Módulo
 
 1. **Frontend (Cliente):** Formulario modular desarrollado con React Hook Form y Shadcn/UI que realiza validación en tiempo real en el navegador usando Zod.
 2. **Capa de Transporte:** Invocación tipada mediante Next.js Server Actions (`"use server"`), evitando la necesidad de endpoints REST tradicionales.
@@ -16,12 +16,12 @@
 
 ---
 
-## 👨‍💻 Tareas y Estado: Leonel Cruzado (Líder / Backend)
+## Tareas y Estado: Leonel Cruzado (Líder / Backend)
 
-### 📌 Rama de Trabajo
+### Rama de Trabajo
 `feature/server-action-teams-register` (apuntando a `dev`)
 
-### 📋 Entregables y Criterios de Aceptación:
+### Entregables y Criterios de Aceptación:
 - [x] **Instalación de dependencias de validación:**
   - Inclusión de `zod` en `package.json` y `package-lock.json`.
 - [x] **Esquema de Validación en Zod (`RF-21`, `RF-22`, `RNF-03`):**
@@ -46,9 +46,9 @@
 
 ---
 
-## 👨‍💻 Tareas y Estado: Adriano Navarro (Junior / Frontend)
+## Tareas y Estado: Adriano Navarro (Junior / Frontend)
 
-### 📌 Rama de Trabajo
+### Rama de Trabajo
 `feature/formulario-registro-equipos`  
 *(Creada a partir de `origin/feature/server-action-teams-register` o `dev` tras el merge)*
 
@@ -77,7 +77,7 @@
 
 ---
 
-## 🚀 Guía de Integración Rápida para Frontend
+## Guía de Integración Rápida para Frontend
 
 Adriano puede consumir el módulo de Leonel utilizando la siguiente estructura:
 
@@ -107,12 +107,11 @@ export function RegisterForm() {
   const onSubmit = async (values: TeamRegistrationFormValues) => {
     const response = await registerTeamAction(values);
     if (response.success) {
-      // Manejar éxito (modal / redirección / mensaje)
+
     } else {
-      // Mostrar mensaje de error (response.message)
+
     }
   };
 
-  // ... lógica de renderizado
 }
 ```
