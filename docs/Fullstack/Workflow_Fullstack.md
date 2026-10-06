@@ -112,6 +112,5 @@ export function RegisterForm() {
 
     }
   };
-
 }
 ```
