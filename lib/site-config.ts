@@ -5,8 +5,8 @@
 
 const closeDate = process.env.NEXT_PUBLIC_REGISTRATION_CLOSE_ISO?.trim() ?? ''
 export const REGISTRATION_CLOSE_CONFIRMED = closeDate !== '' && !Number.isNaN(Date.parse(closeDate))
-// Keep the previously used countdown for design review; do not label it official.
-export const REGISTRATION_CLOSE_ISO = REGISTRATION_CLOSE_CONFIRMED ? closeDate : '2027-02-08T23:59:59-05:00'
+// Set the public environment value only after the organization confirms the deadline.
+export const REGISTRATION_CLOSE_ISO = REGISTRATION_CLOSE_CONFIRMED ? closeDate : null
 export const REGISTRATION_CLOSE_LABEL = REGISTRATION_CLOSE_ISO
   ? new Intl.DateTimeFormat('es-PE', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Lima' }).format(new Date(REGISTRATION_CLOSE_ISO))
   : 'Fecha por confirmar'
@@ -161,7 +161,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: '¿Cuál es la fecha límite de inscripción?',
-    a: 'La fecha oficial de cierre se anunciará próximamente. El cronograma de esta página se actualizará cuando la organización confirme el calendario.',
+    a: REGISTRATION_CLOSE_ISO ? `El cierre de inscripciones es el ${REGISTRATION_CLOSE_LABEL} (hora de Perú).` : 'La fecha oficial de cierre se anunciará próximamente.',
   },
   {
     q: '¿Puedo postular si todavía no tengo equipo?',

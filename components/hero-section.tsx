@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { ArrowRight, Users, Pause, Play } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Countdown } from '@/components/countdown'
-import { REGISTRATION_CLOSE_ISO, REGISTRATION_CLOSE_LABEL, REGISTRATION_CLOSE_CONFIRMED } from '@/lib/site-config'
+import { REGISTRATION_CLOSE_ISO, REGISTRATION_CLOSE_LABEL } from '@/lib/site-config'
 import { REGISTRATION_URL } from '@/lib/public-content'
 
 const HERO_IMAGES = [
@@ -33,7 +33,7 @@ export function HeroSection() {
       <div><h1 className="hero-title max-w-2xl text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl xl:text-6xl"><span className="title-word">Tu idea.</span>{' '}<span className="title-word">Tu equipo.</span>{' '}<span className="title-word impact-word text-brand-pink">Tu impacto.<svg aria-hidden="true" viewBox="0 0 300 16" preserveAspectRatio="none" className="impact-stroke"><path d="M3 11 Q100 0 150 8 T297 7" /></svg></span></h1>
         <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-white/75 sm:text-lg">Emprende desde la UNI. Encuentra equipo y transforma una idea en impacto.</p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap"><Button render={<Link href={REGISTRATION_URL} />} nativeButton={false} size="lg" className="min-h-12 bg-brand-pink px-6 text-base font-semibold text-brand-ink hover:bg-brand-pink-2">Quiero participar<ArrowRight className="size-5" aria-hidden="true" /></Button><Button render={<Link href="/#matchmaking" />} nativeButton={false} size="lg" variant="outline" className="min-h-12 border-white/25 bg-transparent px-6 text-base text-white hover:bg-white/10"><Users className="size-5" aria-hidden="true" />Busco equipo</Button></div>
-        <div className="mt-6 border-t border-white/15 pt-5"><p className="text-sm font-semibold text-brand-pink-3">Cierre de inscripciones</p><p className="mt-1 text-sm text-white/80">{REGISTRATION_CLOSE_LABEL} · hora de Perú</p>{!REGISTRATION_CLOSE_CONFIRMED && <p className="mt-1 text-xs text-white/55">Fecha provisional · por confirmar.</p>}<div className="mt-3"><Countdown targetIso={REGISTRATION_CLOSE_ISO} /></div></div>
+        {REGISTRATION_CLOSE_ISO && <div className="mt-6 border-t border-white/15 pt-5"><p className="text-sm font-semibold text-brand-pink-3">Cierre de inscripciones</p><p className="mt-1 text-sm text-white/80">{REGISTRATION_CLOSE_LABEL} · hora de Perú</p><div className="mt-3"><Countdown targetIso={REGISTRATION_CLOSE_ISO} /></div></div>}
       </div>
       <div role="region" aria-roledescription="carrusel" aria-label="Imágenes de la comunidad Hult Prize at UNI" className="relative isolate aspect-[4/3] overflow-hidden rounded-lg border border-white/15 bg-[#201d2e] lg:aspect-[1/1]" onMouseEnter={() => setPlaying(false)} onFocusCapture={() => setPlaying(false)}>
         {HERO_IMAGES.map((image, index) => <Image key={image.src} src={image.src} alt={image.alt} fill aria-hidden={activeImage !== index} priority={index === 0} sizes="(max-width: 1023px) 95vw, 50vw" className={`hero-slide object-cover ${activeImage === index ? 'is-active z-10 opacity-100' : 'z-0 opacity-0'}`} />)}
