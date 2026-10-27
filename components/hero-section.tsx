@@ -28,7 +28,26 @@ export function HeroSection() {
     return () => { window.clearInterval(interval); motion.removeEventListener('change', stopOnPreference) }
   }, [playing])
   return <section id="inicio" className="relative overflow-hidden bg-brand-ink pb-8 pt-24 sm:pb-10 sm:pt-24">
-    <div aria-hidden="true" className="hult-hero-background"><span className="hult-watermark">HULT<span>PRIZE</span></span><svg viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor"><path d="M-80 420 220 120h280l180 180h300l250-250M-60 465l300-300h240l180 180h340l250-250M-40 510l300-300h200l180 180h380l250-250"/><circle cx="220" cy="120" r="7"/><circle cx="680" cy="300" r="7"/><circle cx="980" cy="300" r="7"/></g></svg></div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.14]"
+        style={{
+          backgroundImage:
+            'linear-gradient(to right, #ffffff 1px, transparent 1px), linear-gradient(to bottom, #ffffff 1px, transparent 1px)',
+          backgroundSize: '48px 48px',
+          maskImage:
+            'radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 80%)',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -left-24 -top-24 h-96 w-96 rounded-full bg-brand-pink/25 blur-[120px]"
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-10 right-0 h-80 w-80 rounded-full bg-brand-cyan/20 blur-[120px]"
+      />
+
     <div className="relative mx-auto max-w-7xl px-5 sm:px-8"><div className="grid items-start gap-7 lg:grid-cols-2 lg:gap-12">
       <div><h1 className="hero-title max-w-2xl text-balance text-4xl font-bold leading-[1.08] tracking-tight text-white sm:text-5xl xl:text-6xl"><span className="title-word">Tu idea.</span>{' '}<span className="title-word">Tu equipo.</span>{' '}<span className="title-word impact-word text-brand-pink">Tu impacto.<svg aria-hidden="true" viewBox="0 0 300 16" preserveAspectRatio="none" className="impact-stroke"><path d="M3 11 Q100 0 150 8 T297 7" /></svg></span></h1>
         <p className="mt-5 max-w-xl text-pretty text-base leading-relaxed text-white/75 sm:text-lg">Emprende desde la UNI. Encuentra equipo y transforma una idea en impacto.</p>
