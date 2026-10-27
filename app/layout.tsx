@@ -13,13 +13,11 @@ export const metadata: Metadata = {
   title: 'Hult Prize at UNI 2027 — Emprendimiento de impacto',
   description:
     'Transforma tus ideas en startups de impacto global desde la Universidad Nacional de Ingeniería. Participa en Hult Prize at UNI 2027.',
-  generator: 'v0.app',
   keywords: [
     'Hult Prize',
     'UNI',
     'Universidad Nacional de Ingeniería',
     'emprendimiento social',
-    'UNICode',
     '2027',
   ],
   openGraph: {
