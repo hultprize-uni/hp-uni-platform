@@ -12,20 +12,21 @@ import {
   SheetTrigger,
   SheetClose,
 } from '@/components/ui/sheet'
-import { NAV_LINKS, ROUTES } from '@/lib/site-config'
+import { REGISTRATION_URL } from '@/lib/public-content'
+import { NAV_LINKS } from '@/lib/site-config'
 
 export function SiteHeader() {
   return (
-    <header className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-[#191919]/80 shadow-[0_4px_20px_rgba(234,72,153,0.15)] backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-8">
-        <Link href="#inicio" aria-label="Hult Prize at UNI 2027 — Inicio">
+    <header className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-[#191919]">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-8">
+        <Link href="/#inicio" aria-label="Hult Prize at UNI 2027 — Inicio">
           <Image
             src="/logos/Diseño sin título.jpg"
             alt="Hult Prize at UNI 2027"
             width={258}
             height={95}
             priority
-            className="h-12 w-auto"
+            className="h-10 w-auto"
           />
         </Link>
 
@@ -41,6 +42,7 @@ export function SiteHeader() {
                 </a>
               </li>
             ))}
+            <li><Button render={<Link href={REGISTRATION_URL} />} nativeButton={false} className="ml-3 min-h-11 bg-brand-pink px-4 font-semibold text-brand-ink hover:bg-brand-pink-2">Inscríbete</Button></li>
           </ul>
         </nav>
 
@@ -52,7 +54,7 @@ export function SiteHeader() {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-white hover:bg-white/10"
+                  className="size-11 text-white hover:bg-white/10"
                   aria-label="Abrir menú"
                 />
               }
@@ -70,7 +72,7 @@ export function SiteHeader() {
                     alt="Hult Prize at UNI 2027"
                     width={258}
                     height={95}
-                    className="h-12 w-auto"
+                    className="h-10 w-auto"
                     loading="lazy"
                   />
                 </SheetTitle>
@@ -99,11 +101,11 @@ export function SiteHeader() {
                   render={
                     <SheetClose
                       nativeButton={false}
-                      render={<Link href={ROUTES.registro} />}
+                      render={<Link href={REGISTRATION_URL} />}
                     />
                   }
                   nativeButton={false}
-                  className="w-full bg-gradient-to-r from-[#ea4899] to-[#8a2899] text-white hover:brightness-110"
+                  className="min-h-12 w-full bg-brand-pink font-semibold text-brand-ink hover:bg-brand-pink-2"
                 >
                   Inscríbete aquí
                 </Button>
@@ -112,10 +114,7 @@ export function SiteHeader() {
           </Sheet>
         </div>
       </div>
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-[#12d8e8]/0 via-[#ea4899]/80 to-[#8a2899]/0"
-      />
+
     </header>
   )
 }

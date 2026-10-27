@@ -3,21 +3,25 @@
  * Los valores no confirmados por negocio se dejan como placeholders {{...}}.
  */
 
-export const REGISTRATION_CLOSE_ISO = '2027-02-08T23:59:59-05:00'
-export const REGISTRATION_CLOSE_LABEL = 'Lunes 8 de febrero de 2027 · 23:59'
+const closeDate = process.env.NEXT_PUBLIC_REGISTRATION_CLOSE_ISO?.trim() ?? ''
+export const REGISTRATION_CLOSE_CONFIRMED = closeDate !== '' && !Number.isNaN(Date.parse(closeDate))
+// Keep the previously used countdown for design review; do not label it official.
+export const REGISTRATION_CLOSE_ISO = REGISTRATION_CLOSE_CONFIRMED ? closeDate : '2027-02-08T23:59:59-05:00'
+export const REGISTRATION_CLOSE_LABEL = REGISTRATION_CLOSE_ISO
+  ? new Intl.DateTimeFormat('es-PE', { dateStyle: 'long', timeStyle: 'short', timeZone: 'America/Lima' }).format(new Date(REGISTRATION_CLOSE_ISO))
+  : 'Fecha por confirmar'
 
 export const NAV_LINKS = [
-  { label: 'Inicio', href: '#inicio' },
-  { label: 'Sobre el reto', href: '#about' },
-  { label: 'Ganadores', href: '#ganadores' },
-  { label: 'Cronograma', href: '#cronograma' },
-  { label: 'Matchmaking', href: '#matchmaking' },
-  { label: 'FAQ', href: '#faq' },
+  { label: 'Inicio', href: '/#inicio' },
+  { label: 'Sobre Hult Prize', href: '/#about' },
+  { label: 'Cronograma', href: '/cronograma' },
+  { label: 'Nuestro equipo', href: '/#equipo' },
+  { label: 'FAQ', href: '/#faq' },
 ] as const
 
 export const ROUTES = {
   registro: '/registro',
-  matchmaking: '/registro?flow=matchmaking',
+  matchmaking: '/#matchmaking',
 }
 
 // Etapas globales de Hult Prize (lenguaje propio UNICode)
@@ -58,37 +62,37 @@ export const LOCAL_PHASES = [
   {
     key: 'fase-1',
     phase: 'Fase 1',
-    image: '/fotos/crono-fase1.webp',
+    image: '/fotos/DSC05444.webp',
     title: 'Convocar e Inscribir',
     dateRange: 'Por confirmar',
-    body: 'Presenta tu propuesta y registra a las personas de tu equipo para participar en la edición 2027.',
+    body: 'Registra tu idea y a tu equipo.',
     details: 'Registra a las personas postulantes y presenta el problema que el equipo quiere abordar. Las bases oficiales definirán los requisitos y las fechas de apertura y cierre.',
   },
   {
     key: 'fase-2',
     phase: 'Fase 2',
-    image: '/fotos/crono-fase2.webp',
+    image: '/fotos/proyecto-2.webp',
     title: 'Formación y mentorías',
     dateRange: 'Por confirmar',
-    body: 'Fortalece la propuesta con herramientas de emprendimiento, validación y mentoría especializada.',
+    body: 'Aprende y fortalece tu propuesta.',
     details: 'Participa en sesiones de formación y mentoría para validar el problema, contrastar la solución con usuarios y preparar un modelo de emprendimiento sostenible.',
   },
   {
     key: 'fase-3',
     phase: 'Fase 3',
-    image: '/fotos/crono-fase3.webp',
+    image: '/fotos/proyecto-4.webp',
     title: 'Presentación y evaluación',
     dateRange: 'Por confirmar',
-    body: 'Expón el problema, la solución propuesta y el potencial de impacto de tu emprendimiento.',
+    body: 'Comparte tu solución y su impacto.',
     details: 'Entrega la presentación y los materiales solicitados en las bases. El jurado evaluará cada propuesta con los criterios y la rúbrica publicados para la edición.',
   },
   {
     key: 'fase-4',
     phase: 'Fase 4',
-    image: '/fotos/crono-fase4.webp',
+    image: '/fotos/DSC05686.webp',
     title: 'Final en la UNI',
     dateRange: 'Por confirmar',
-    body: 'Los equipos finalistas presentan sus propuestas ante el jurado de la sede UNI.',
+    body: 'Presenta tu propuesta ante el jurado.',
     details: 'Los equipos finalistas presentan su propuesta en la sede UNI. El formato, la fecha y los criterios de selección se confirmarán en el cronograma oficial.',
   },
 ] as const
@@ -124,22 +128,22 @@ export const BOOTCAMP_MODULES = [
   {
     number: '01',
     title: 'Problema e impacto',
-    body: 'Delimita el desafío, identifica a las personas afectadas y define cómo medir el impacto.',
+    body: 'Define el desafío que quieres resolver.',
   },
   {
     number: '02',
     title: 'Validación de solución',
-    body: 'Contrasta hipótesis con usuarios y convierte hallazgos en una propuesta de valor.',
+    body: 'Prueba tu idea con personas reales.',
   },
   {
     number: '03',
     title: 'Modelo de negocio',
-    body: 'Diseña una operación sostenible, estima costos y plantea una ruta de crecimiento.',
+    body: 'Construye una propuesta sostenible.',
   },
   {
     number: '04',
     title: 'Pitch y presentación',
-    body: 'Comunica evidencia, viabilidad y resultados esperados con claridad ante el jurado.',
+    body: 'Cuenta tu propuesta con claridad.',
   },
 ] as const
 
@@ -161,7 +165,7 @@ export const FAQ_ITEMS = [
   },
   {
     q: '¿Puedo postular si todavía no tengo equipo?',
-    a: 'Sí. Puedes registrarte de forma individual y usar el espacio de Matchmaking para encontrar personas con intereses y habilidades complementarias.',
+    a: 'Sí. Puedes participar de forma individual y encontrar personas con intereses y habilidades complementarias en el grupo de WhatsApp que habilitará la organización. Consulta el apartado «Encuentra tu equipo» para conocer su disponibilidad.',
   },
   {
     q: '¿Quiénes pueden participar?',

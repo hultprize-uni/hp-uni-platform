@@ -9,7 +9,7 @@ import { FAQ_ITEMS } from '@/lib/site-config'
 
 export function FaqSection() {
   return (
-    <section id="faq" className="bg-brand-navy/25 py-20 sm:py-28">
+    <section id="faq" className="bg-brand-navy/25 py-12 sm:py-16">
       <div className="mx-auto max-w-3xl px-4 sm:px-8">
         <SectionHeading
           align="center"
@@ -17,7 +17,7 @@ export function FaqSection() {
           title="Lo que todo postulante quiere saber."
         />
 
-        <Accordion multiple={false} className="mt-10 w-full">
+        <Accordion multiple={false} className="mt-8 w-full">
           {FAQ_ITEMS.map((item, i) => (
             <AccordionItem
               key={i}

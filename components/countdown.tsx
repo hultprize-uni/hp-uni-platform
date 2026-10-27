@@ -31,6 +31,7 @@ export function Countdown({ targetIso }: { targetIso: string }) {
   const [time, setTime] = useState<TimeLeft | null>(null)
 
   useEffect(() => {
+    if (!Number.isFinite(target)) return
     const update = () => setTime(diff(target))
     const initialUpdateId = window.setTimeout(update, 0)
     const intervalId = window.setInterval(update, 1000)
@@ -40,16 +41,19 @@ export function Countdown({ targetIso }: { targetIso: string }) {
     }
   }, [target])
 
+  if (!Number.isFinite(target)) return null
+
   return (
     <div
       className="flex items-stretch gap-2 sm:gap-3"
       role="timer"
+      aria-live="off"
       aria-label="Cuenta regresiva para el cierre de inscripciones"
     >
       {UNITS.map((unit) => (
         <div
           key={unit.key}
-          className="flex min-w-[3.5rem] flex-col items-center rounded-xl border border-white/10 bg-white/5 px-2 py-3 backdrop-blur-sm sm:min-w-[5rem] sm:px-3"
+          className="flex min-w-[3.5rem] flex-col items-center rounded-md border border-white/15 bg-white/5 px-2 py-2.5 sm:min-w-[4.5rem] sm:px-3"
         >
           <span className="font-mono text-2xl font-bold tabular-nums text-white sm:text-3xl">
             {time ? String(time[unit.key]).padStart(2, '0') : '--'}

@@ -22,12 +22,12 @@ export function SectionHeading({
       )}
     >
       {eyebrow ? (
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-pink">
+        <p className="sr-only">
           {eyebrow}
         </p>
       ) : null}
       {/* El título de sección es el elemento tipográfico más grande y de mayor contraste */}
-      <h2 className="mt-3 text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+      <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
         {title}
       </h2>
       {description ? (
