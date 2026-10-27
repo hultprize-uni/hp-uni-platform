@@ -1,53 +1,49 @@
 import Link from 'next/link'
-import { Users, GraduationCap, Target, ArrowRight } from 'lucide-react'
+import Image from 'next/image'
+import { ArrowRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SectionHeading } from '@/components/section-heading'
-import { ROUTES } from '@/lib/site-config'
+import { REGISTRATION_URL } from '@/lib/public-content'
 
 const REQUIREMENTS = [
   {
-    icon: Users,
+    photo: 'DSC05426', alt: 'Participantes reunidos en la UNI',
     title: 'Equipos de 1 a 4 personas',
-    body: 'Puedes postular en solitario o con un squad de hasta cuatro integrantes. Ni uno más.',
+    body: 'Participa solo o con hasta tres personas más.',
     highlight: '1–4',
   },
   {
-    icon: GraduationCap,
+    photo: 'hero-4', alt: 'Estudiantes en el auditorio de la UNI',
     title: 'Mínimo 1 estudiante UNI',
-    body: 'Al menos un integrante debe ser estudiante matriculado en la Universidad Nacional de Ingeniería.',
+    body: 'Al menos una persona matriculada en la UNI.',
     highlight: '≥ 1 UNI',
   },
   {
-    icon: Target,
-    title: 'Alineado al Reto Global 2027',
-    body: 'La propuesta debe responder al reto global de 2027. El enfoque oficial se publicará con las bases de la edición.',
-    highlight: 'Reto 2027',
+    photo: 'DSC05401', alt: 'Presentación de una solución para reducir residuos',
+    title: 'Alineado con los ODS',
+    body: 'Una propuesta que aporte a los Objetivos de Desarrollo Sostenible.',
+    highlight: 'ODS',
   },
 ]
 
 export function RequirementsSection() {
   return (
-    <section className="bg-brand-navy/25 py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-8">
+    <section id="requisitos" className="bg-brand-navy/25 py-12 sm:py-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-8">
         <SectionHeading
           eyebrow="Requisitos de participación"
-          title="Antes de inscribirte, revisa la letra clara."
-          description="Reglas simples, sin sorpresas. Si cumples estos tres puntos, tu equipo está listo para postular."
+          title="Lo que necesitas."
+          description="Revisa las bases oficiales antes de postular."
         />
 
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
+        <div className="mt-8 grid gap-5 md:grid-cols-3">
           {REQUIREMENTS.map((req) => (
             <div
               key={req.title}
-              className="flex flex-col rounded-2xl border border-white/10 bg-white/[0.03] p-7"
+              className="flex flex-col rounded-lg border border-white/10 bg-white/[0.03] p-7"
             >
               <div className="flex items-center justify-between">
-                <span className="inline-flex size-12 items-center justify-center rounded-xl bg-brand-pink/15 ring-1 ring-brand-pink/30">
-                  <req.icon
-                    className="size-6 text-brand-pink-3"
-                    aria-hidden="true"
-                  />
-                </span>
+                <div className="photo-reveal relative h-28 w-40 overflow-hidden rounded-md"><Image src={`/fotos/${req.photo}.webp`} alt={req.alt} fill sizes="160px" className="object-cover" /></div>
                 <span className="rounded-lg bg-white/5 px-3 py-1 font-mono text-sm font-semibold text-brand-cyan">
                   {req.highlight}
                 </span>
@@ -62,15 +58,15 @@ export function RequirementsSection() {
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col items-start gap-4 rounded-2xl border border-brand-pink/30 bg-brand-pink/10 p-7 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col items-start gap-4 rounded-lg border border-brand-pink/30 bg-brand-pink/10 p-7 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-lg font-medium text-white">
-            ¿Cumples los requisitos? Asegura tu cupo antes del cierre.
+            ¿Listo para empezar?
           </p>
           <Button
-            render={<Link href={ROUTES.registro} />}
+            render={<Link href={REGISTRATION_URL} />}
             nativeButton={false}
             size="lg"
-            className="h-12 shrink-0 bg-brand-pink px-6 text-base text-white hover:bg-brand-pink-2"
+            className="h-12 shrink-0 bg-brand-pink px-6 text-base text-brand-ink hover:bg-brand-pink-2"
           >
             Inscribir Equipo
             <ArrowRight className="size-5" aria-hidden="true" />

@@ -1,89 +1,16 @@
-import { Card } from '@/components/ui/card'
-import { SectionHeading } from '@/components/section-heading'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowUpRight } from 'lucide-react'
 
-const PILLARS = [
-  {
-    title: 'Emprendimiento con propósito',
-    body: 'Convierte un desafío social o ambiental en una propuesta de negocio sostenible, con impacto medible y potencial de crecimiento.',
-  },
-  {
-    title: 'Validación de soluciones',
-    body: 'Investiga necesidades, contrasta hipótesis con personas usuarias y desarrolla una solución basada en evidencia.',
-  },
-  {
-    title: 'Comunidad global',
-    body: 'Comparte el trabajo de tu equipo con una comunidad universitaria internacional enfocada en innovación y emprendimiento de impacto.',
-  },
+const STEPS = [
+  { title: 'Elige un problema', body: 'Observa un problema de tu entorno y pregúntate qué podrías hacer diferente.' },
+  { title: 'Suma otras miradas', body: 'Comparte tu idea con personas de otras especialidades. No tienes que recorrer el camino a solas.' },
+  { title: 'Prueba tu solución', body: 'Contrasta tu propuesta, aprende del proceso y prepara la manera de contarla.' },
 ]
 
 export function AboutSection() {
-  return (
-    <section
-      id="about"
-      className="bg-brand-ink py-20 sm:py-28"
-    >
-      <div className="mx-auto max-w-6xl px-4 sm:px-8">
-        <SectionHeading
-          eyebrow="¿Qué es Hult Prize?"
-          title="Emprendimiento universitario para desafíos globales."
-          description="Hult Prize es una competencia universitaria que impulsa a estudiantes a crear empresas sostenibles capaces de responder a desafíos sociales y ambientales. En 2027, la comunidad UNI podrá desarrollar y presentar propuestas alineadas con el reto global de la edición."
-        />
-
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
-          {PILLARS.map((pillar) => (
-            <Card
-              key={pillar.title}
-              className="group border-white/10 bg-white/[0.03] p-7 transition-colors hover:border-white/20 hover:bg-white/[0.05]"
-            >
-              <h3 className="text-xl font-semibold text-white">
-                {pillar.title}
-              </h3>
-              <p className="mt-3 text-sm leading-relaxed text-white/65">
-                {pillar.body}
-              </p>
-            </Card>
-          ))}
-        </div>
-
-        {/* Bloque anfitriona UNI */}
-        <div className="mt-6 overflow-hidden rounded-2xl border border-brand-navy/60 bg-brand-navy/40 p-7 sm:p-9">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="max-w-2xl">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand-cyan">
-                Sede UNI · Edición 2027
-              </p>
-              <h3 className="mt-3 text-2xl font-bold text-white sm:text-3xl">
-                Innovación con base técnica y compromiso social.
-              </h3>
-              <p className="mt-3 text-pretty text-white/70">
-                La Universidad Nacional de Ingeniería reúne talento de distintas
-                disciplinas para investigar problemas, construir prototipos y
-                evaluar su viabilidad en contextos reales.
-              </p>
-            </div>
-            <dl className="grid grid-cols-3 gap-4 lg:shrink-0">
-              {[
-                { n: '2027', l: 'Edición' },
-                { n: 'UNI', l: 'Sede local' },
-                { n: 'ODS', l: 'Impacto' },
-              ].map((stat) => (
-                <div
-                  key={stat.l}
-                  className="rounded-xl border border-white/10 bg-brand-ink/50 px-4 py-4 text-center"
-                >
-                  <dt className="sr-only">{stat.l}</dt>
-                  <dd className="font-mono text-2xl font-bold text-brand-pink-3">
-                    {stat.n}
-                  </dd>
-                  <p className="mt-1 text-[0.7rem] uppercase tracking-wide text-white/55">
-                    {stat.l}
-                  </p>
-                </div>
-              ))}
-            </dl>
-          </div>
-        </div>
-      </div>
-    </section>
-  )
+  return <section id="about" className="bg-brand-ink py-12 sm:py-16"><div className="mx-auto grid max-w-7xl items-center gap-8 px-5 sm:px-8 lg:grid-cols-2 lg:gap-12">
+    <figure><div className="photo-reveal relative aspect-[4/3] overflow-hidden rounded-md border border-white/10"><Image src="/fotos/proyecto-3.webp" alt="Una participante presenta su propuesta ante el público en un evento de la UNI" fill sizes="(max-width: 1023px) 90vw, 50vw" className="object-cover" /></div><figcaption className="mt-3 text-sm leading-relaxed text-white/55">Ideas en voz alta.</figcaption></figure>
+    <div><h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl">De una idea a algo real.</h2><p className="mt-5 leading-relaxed text-white/75">Una competencia de emprendimiento para resolver desafíos sociales y ambientales desde la universidad.</p><ol className="mt-6 space-y-5">{STEPS.map((step,index) => <li key={step.title} className="flex gap-4"><span className="mt-1 font-mono text-sm text-brand-pink-3" aria-hidden="true">0{index + 1}</span><div><h3 className="font-semibold text-white">{step.title}</h3></div></li>)}</ol><Link href="/cronograma" className="mt-6 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-brand-pink-3 underline underline-offset-4">Conoce cómo es el recorrido<ArrowUpRight aria-hidden="true" className="size-4" /></Link></div>
+  </div></section>
 }

@@ -13,16 +13,19 @@ export function WinnersSection() {
     setMissingPhotos((current) => current.includes(src) ? current : [...current, src])
   }
 
+  const publishedWinners = WINNERS_2026.filter(winner => !winner.name.toLowerCase().includes('por confirmar') && !winner.project.toLowerCase().includes('por confirmar'))
+  if (!publishedWinners.length) return <section id="ganadores" className="border-y border-white/10 bg-brand-ink py-7"><div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 sm:px-8 md:flex-row md:items-center md:justify-between"><h2 className="text-xl font-semibold text-white">Las ideas de la edición 2026.</h2><p className="max-w-2xl text-sm leading-relaxed text-white/60">Los proyectos reconocidos y las historias de sus equipos se publicarán cuando se validen los resultados oficiales.</p></div></section>
+
   return (
     <section id="ganadores" className="bg-brand-ink py-20 sm:py-28">
-      <div className="mx-auto max-w-6xl px-4 sm:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-8">
         <SectionHeading
           eyebrow="Edición 2026"
           title="Equipos ganadores"
           description="Conoce las propuestas reconocidas en la edición anterior. Los perfiles se completarán al validar los resultados oficiales."
         />
         <ol className="mt-12 grid gap-5 md:grid-cols-3">
-          {WINNERS_2026.map((winner) => (
+          {publishedWinners.map((winner) => (
             <li key={winner.place}>
               <article className="h-full border border-white/10 bg-white/[0.03]">
                 <div className="relative aspect-[4/3] overflow-hidden bg-[#201d2e]">
