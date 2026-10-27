@@ -21,7 +21,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-8">
         <Link href="/#inicio" aria-label="Hult Prize at UNI 2027 — Inicio">
           <Image
-            src="/logos/Diseño sin título.jpg"
+            src="/logos/hp-uni-logo-principal.jpg"
             alt="Hult Prize at UNI 2027"
             width={258}
             height={95}
@@ -68,7 +68,7 @@ export function SiteHeader() {
               <SheetHeader>
                 <SheetTitle className="text-left text-white">
                   <Image
-                    src="/logos/Diseño sin título.jpg"
+                    src="/logos/hp-uni-logo-principal.jpg"
                     alt="Hult Prize at UNI 2027"
                     width={258}
                     height={95}

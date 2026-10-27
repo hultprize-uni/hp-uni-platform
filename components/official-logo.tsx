@@ -18,7 +18,7 @@ export function OfficialLogo() {
         </span>
       ) : (
         <Image
-          src="/logos/Diseño sin título.jpg"
+          src="/logos/hp-uni-logo-principal.jpg"
           alt="Hult Prize at UNI 2027"
           width={258}
           height={95}

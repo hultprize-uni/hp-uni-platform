@@ -42,6 +42,6 @@ export function HeroSection() {
       </div>
     </div>
     </div>
-    <div className="relative mx-auto mt-7 flex max-w-7xl flex-wrap items-center justify-between gap-5 border-t border-white/15 px-5 pt-5 sm:px-8"><div aria-label="Hult Prize at UNI" className="hult-signature"><span>Hult Prize<span className="text-brand-pink"> at UNI</span></span><span className="text-xs font-normal tracking-[.18em] text-white/55">IDEAS QUE CONECTAN</span></div><Image src="/logos/Diseño sin título (1).jpg" alt="Hult Prize y Universidad Nacional de Ingeniería" width={465} height={170} className="h-12 w-auto max-w-[45%] object-contain sm:h-14" /></div>
+    <div className="relative mx-auto mt-7 flex max-w-7xl flex-wrap items-center justify-between gap-5 border-t border-white/15 px-5 pt-5 sm:px-8"><div aria-label="Hult Prize at UNI" className="hult-signature"><span>Hult Prize<span className="text-brand-pink"> at UNI</span></span><span className="text-xs font-normal tracking-[.18em] text-white/55">IDEAS QUE CONECTAN</span></div><Image src="/logos/hp-uni-logo-institucional.jpg" alt="Hult Prize y Universidad Nacional de Ingeniería" width={465} height={170} className="h-12 w-auto max-w-[45%] object-contain sm:h-14" /></div>
   </section>
 }
