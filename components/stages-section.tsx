@@ -1,88 +1,25 @@
- 'use client';
+'use client'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRef, useState } from 'react'
+import { X } from 'lucide-react'
+import { SectionHeading } from '@/components/section-heading'
+import { LOCAL_PHASES } from '@/lib/site-config'
 
- import Image from 'next/image'
- import { useRef } from 'react'
- import { SectionHeading } from '@/components/section-heading'
- import { LOCAL_PHASES } from '@/lib/site-config'
-
- export function StagesSection() {
-   const carouselRef = useRef<HTMLOListElement>(null)
-
-   function scrollCarousel(direction: -1 | 1) {
-     carouselRef.current?.scrollBy({
-       left: direction * 384,
-       behavior: 'smooth',
-     })
-   }
-
-   return (
-     <section
-       id="cronograma"
-       className="bg-brand-navy/25 py-20 sm:py-28"
-     >
-       <div className="mx-auto max-w-6xl px-4 sm:px-8">
-        <SectionHeading
-          eyebrow="Cronograma 2027"
-          title="Un recorrido para llevar tu propuesta a la final."
-          description="El programa avanza desde la inscripción y la formación hasta la presentación de tu propuesta. Desliza para recorrer sus cuatro etapas; las fechas se confirmarán con el calendario oficial."
-        />
-
-        <div className="mt-10 overflow-hidden">
-          <div className="mb-4 flex justify-end gap-2">
-            {([-1, 1] as const).map((direction) => (
-              <button
-                key={direction}
-                type="button"
-                aria-label={direction < 0 ? 'Ver etapa anterior' : 'Ver etapa siguiente'}
-                onClick={() => scrollCarousel(direction)}
-                className="flex size-11 items-center justify-center rounded-full border border-white/15 bg-black transition-colors hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-pink"
-              >
-                <Image
-                  src="/logos/Diseño sin título (9).jpg"
-                  alt=""
-                  width={391}
-                  height={117}
-                  className={`h-5 w-[4.2rem] invert ${direction < 0 ? 'scale-x-[-1]' : ''}`}
-                  loading="lazy"
-                />
-              </button>
-            ))}
-          </div>
-          <ol
-            ref={carouselRef}
-            className="flex snap-x snap-mandatory gap-6 overflow-x-auto overscroll-x-contain scroll-smooth pb-5"
-          >
-            {LOCAL_PHASES.map((phase) => (
-              <li
-                key={phase.key}
-                className="w-[min(84vw,22rem)] shrink-0 snap-start overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] sm:w-[22rem]"
-              >
-                <div className="relative aspect-[16/10] overflow-hidden bg-[#201d2e]">
-                  <Image
-                    src={phase.image}
-                    alt={`Ilustración de ${phase.phase}: ${phase.title}`}
-                    width={880}
-                    height={550}
-                    loading="lazy"
-                    sizes="(max-width: 640px) 84vw, 22rem"
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                  <span className="absolute left-4 top-4 rounded-full bg-brand-pink px-3 py-1 text-xs font-bold text-white">
-                    {phase.phase}
-                  </span>
-                </div>
-                <div className="p-5 sm:p-6">
-                  <p className="text-xs font-semibold uppercase tracking-wide text-brand-cyan">
-                    {phase.dateRange}
-                  </p>
-                  <h3 className="mt-2 text-xl font-bold text-white">{phase.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-white/65">{phase.body}</p>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </div>
-    </section>
-  )
+export function StagesSection({ detailed = false }: { detailed?: boolean }) {
+  const dialog = useRef<HTMLDialogElement>(null)
+  const [selected, setSelected] = useState<(typeof LOCAL_PHASES)[number]>(LOCAL_PHASES[0])
+  function showPhase(phase: (typeof LOCAL_PHASES)[number]) { setSelected(phase); dialog.current?.showModal() }
+  return <section id="cronograma" className="bg-brand-navy/25 py-12 sm:py-16"><div className="mx-auto max-w-7xl px-5 sm:px-8">
+    <SectionHeading title="Tu camino a la final." description="Cuatro etapas. Fechas por confirmar." />
+    <ol className="journey-track relative mt-8 grid gap-8 border-l border-white/20 pl-6 md:grid-cols-2 md:border-l-0 md:pl-0 xl:grid-cols-4">{LOCAL_PHASES.map((phase, index) => <li key={phase.key} className="stage-card relative min-w-0 md:border-t md:border-white/20 md:pt-7">
+      <span className="absolute -left-[29px] top-1 size-2.5 rounded-full bg-brand-pink md:-top-1.5 md:left-0" aria-hidden="true" />
+      <p className="text-sm font-medium text-brand-pink-3">0{index + 1}<span className="ml-3 text-white/55">{phase.dateRange}</span></p>
+      <div className="photo-reveal relative mt-5 aspect-[16/10] overflow-hidden rounded-md border border-white/10 bg-brand-ink"><Image src={phase.image} alt="" fill sizes="(max-width: 767px) 90vw, (max-width: 1279px) 45vw, 25vw" className="object-cover" /></div>
+      <h3 className="mt-5 text-xl font-semibold text-white">{phase.title}</h3><p className="mt-3 text-sm leading-relaxed text-white/65">{phase.body}</p>
+      {detailed ? <p className="mt-4 text-sm leading-relaxed text-white/65">{phase.details}</p> : <button type="button" onClick={() => showPhase(phase)} className="mt-3 min-h-11 text-sm font-medium text-brand-pink-3 underline decoration-brand-pink/50 underline-offset-4 hover:text-white">Ver detalles de {phase.phase.toLowerCase()}</button>}
+    </li>)}</ol>
+    {!detailed && <Link href="/cronograma" className="mt-9 inline-flex min-h-12 items-center justify-center rounded-md border border-white/25 px-5 text-sm font-medium text-white hover:bg-white/5">Ver cronograma completo</Link>}
+    <dialog ref={dialog} aria-labelledby="phase-title" className="m-auto w-[calc(100%-2.5rem)] max-w-lg rounded-lg border border-white/20 bg-[#201d2e] p-7 text-white backdrop:bg-black/70"><div className="flex items-start justify-between gap-4"><h2 id="phase-title" className="text-2xl font-semibold">{selected.title}</h2><button type="button" onClick={() => dialog.current?.close()} aria-label="Cerrar detalles de la etapa" className="flex size-11 shrink-0 items-center justify-center rounded border border-white/20"><X className="size-5" /></button></div><p className="mt-4 text-sm text-brand-pink-3">{selected.phase} · {selected.dateRange}</p><p className="mt-4 leading-relaxed text-white/75">{selected.details}</p></dialog>
+  </div></section>
 }
