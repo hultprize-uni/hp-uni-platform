@@ -29,18 +29,18 @@ Las reglas permanentes de seguridad, alcance y colaboración se encuentran en `A
 - [x] 0.3 Confirmar que las variables locales apuntan al proyecto Supabase DEV.
 - [x] 0.4 Crear y confirmar usuarios de prueba `ADMIN` y `JURADO` en Supabase DEV.
 - [x] 0.5 Aprobar el contrato de roles `ADMIN` y `JURADO` con el líder.
-- [ ] 0.6 Asignar `app_metadata.role` a los usuarios de prueba en Supabase DEV.
+- [x] 0.6 Asignar `app_metadata.role` a los usuarios de prueba en Supabase DEV.
 - [ ] 0.7 Acordar con Jairo la interfaz de los helpers de autenticación.
 - [ ] 0.8 Registrar la matriz compartida de casos de prueba.
 
-### Próximo paso autorizado
+### Próximo paso
 
-Completar 0.6 exclusivamente en Supabase DEV:
+Completar 0.7 con Jairo antes de implementar los helpers:
 
-- Usuario administrador: `app_metadata.role = "ADMIN"`.
-- Usuario jurado: `app_metadata.role = "JURADO"`.
-- Conservar cualquier metadata existente.
-- No escribir el rol en `user_metadata`.
+- Acordar los nombres y responsabilidades de los clientes browser y server.
+- Acordar cómo consumirá Jairo el cliente browser desde el formulario de login.
+- Acordar que la lectura y validación del rol se centralizarán en `lib/auth/roles.ts`.
+- Evitar que Jairo duplique clientes, parsing de roles o decisiones de autorización.
 
 ## J1 — Preparar dependencias
 
