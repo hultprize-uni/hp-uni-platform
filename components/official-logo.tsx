@@ -18,10 +18,10 @@ export function OfficialLogo() {
         </span>
       ) : (
         <Image
-          src="/logos/hp-uni-logo-principal.jpg"
+          src="/logos/ef-hult-uni-degradado.png"
           alt="Hult Prize at UNI 2027"
-          width={258}
-          height={95}
+          width={381}
+          height={258}
           loading="lazy"
           className="max-h-full w-full object-contain object-left"
           onError={() => setFailed(true)}

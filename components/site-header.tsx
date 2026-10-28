@@ -19,15 +19,15 @@ export function SiteHeader() {
   return (
     <header className="fixed top-0 left-0 z-50 w-full border-b border-white/10 bg-[#191919]">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-8">
-        <Link href="/#inicio" aria-label="Hult Prize at UNI 2027 — Inicio">
+        <Link href="/#inicio" aria-label="Hult Prize at UNI 2027 — Inicio" className="flex shrink-0 items-center gap-3">
           <Image
-            src="/logos/hp-uni-logo-principal.jpg"
+            src="/logos/ef-hult-uni-degradado.png"
             alt="Hult Prize at UNI 2027"
-            width={258}
-            height={95}
+            width={381}
+            height={258}
             priority
-            className="h-10 w-auto"
-          />
+            className="h-14 w-auto object-contain"
+          /><span aria-hidden="true" className="border-l border-white/20 pl-3 text-sm font-semibold leading-tight text-white">Hult Prize<span className="mt-1 block text-xs font-medium tracking-widest text-brand-pink-3">AT UNI</span></span>
         </Link>
 
         <nav aria-label="Navegación principal" className="hidden lg:block">
@@ -42,7 +42,7 @@ export function SiteHeader() {
                 </a>
               </li>
             ))}
-            <li><Button render={<Link href={REGISTRATION_URL} />} nativeButton={false} className="ml-3 min-h-11 bg-brand-pink px-4 font-semibold text-brand-ink hover:bg-brand-pink-2">Inscríbete</Button></li>
+            <li><Button render={<Link href={REGISTRATION_URL} />} nativeButton={false} className="ml-3 min-h-12 min-w-40 bg-brand-pink px-7 text-base font-semibold text-brand-ink hover:bg-brand-pink-2">Inscríbete</Button></li>
           </ul>
         </nav>
 
@@ -68,11 +68,11 @@ export function SiteHeader() {
               <SheetHeader>
                 <SheetTitle className="text-left text-white">
                   <Image
-                    src="/logos/hp-uni-logo-principal.jpg"
+                    src="/logos/ef-hult-uni-degradado.png"
                     alt="Hult Prize at UNI 2027"
-                    width={258}
-                    height={95}
-                    className="h-10 w-auto"
+                    width={381}
+                    height={258}
+                    className="h-14 w-auto object-contain"
                     loading="lazy"
                   />
                 </SheetTitle>
@@ -105,7 +105,7 @@ export function SiteHeader() {
                     />
                   }
                   nativeButton={false}
-                  className="min-h-12 w-full bg-brand-pink font-semibold text-brand-ink hover:bg-brand-pink-2"
+                  className="min-h-16 w-full bg-brand-pink text-lg font-semibold text-brand-ink hover:bg-brand-pink-2"
                 >
                   Inscríbete aquí
                 </Button>
