@@ -2,36 +2,16 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
-
-type FieldErrors = { email?: string; password?: string };
-
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+import { useRouter } from "next/navigation";
+import { validateLogin, type FieldErrors } from "@/lib/auth/validation";
+import { signIn } from "./actions";
 
 const inputClassName =
   "h-9 w-full rounded-lg border border-input bg-transparent px-3 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:bg-input/30";
 
-function validate(email: string, password: string): FieldErrors {
-  const errors: FieldErrors = {};
-
-  if (!email) {
-    errors.email = "Ingresa tu correo electrónico.";
-  } else if (!EMAIL_PATTERN.test(email)) {
-    errors.email = "Ingresa un correo electrónico válido.";
-  }
-
-  if (!password) {
-    errors.password = "Ingresa tu contraseña.";
-  }
-
-  return errors;
-}
-
-// TODO(A4): reemplazar por signInWithPassword con el cliente Supabase de John (J2).
-async function signIn(): Promise<{ error?: string }> {
-  return { error: "El inicio de sesión aún no está conectado." };
-}
-
 export function LoginForm() {
+  const router = useRouter();
+  const submittingRef = useRef(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<FieldErrors>({});
@@ -42,9 +22,10 @@ export function LoginForm() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submittingRef.current) return;
     setFormError("");
 
-    const fieldErrors = validate(email.trim(), password);
+    const fieldErrors = validateLogin(email.trim(), password);
     setErrors(fieldErrors);
     if (fieldErrors.email) {
       emailRef.current?.focus();
@@ -56,9 +37,21 @@ export function LoginForm() {
     }
 
     setIsSubmitting(true);
-    const { error } = await signIn();
-    setIsSubmitting(false);
-    if (error) setFormError(error);
+    submittingRef.current = true;
+    try {
+      const result = await signIn(email.trim(), password);
+      if (result.error) setFormError(result.error);
+      else if (result.path) {
+        setPassword("");
+        router.replace(result.path);
+        router.refresh();
+      }
+    } catch {
+      setFormError("No pudimos conectar con el servicio. Revisa tu conexión e inténtalo de nuevo.");
+    } finally {
+      submittingRef.current = false;
+      setIsSubmitting(false);
+    }
   }
 
   return (
