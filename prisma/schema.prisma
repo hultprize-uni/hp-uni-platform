@@ -13,20 +13,20 @@ datasource db {
 // ==========================================
 
 enum Role {
-  APPLICANT
-  JUDGE
+  POSTULANTE
+  JURADO
   ADMIN
 }
 
 enum DeliverableStatus {
-  PENDING
-  UPLOADED
-  RECEIVED
+  PENDIENTE
+  SUBIDO
+  RECIBIDO
 }
 
 enum PartnerType {
   SPONSOR
-  COMMUNITY
+  ALIADO
 }
 
 // ==========================================
@@ -39,7 +39,7 @@ model User {
   email     String   @unique
   universityCode String? // UNI student code (at least 1 required per team)
   phone     String?
-  role      Role     @default(APPLICANT)
+  role      Role      @default(POSTULANTE)
   isLeader  Boolean  @default(false) // Whether this user is the team leader
 
   // Team relationship
@@ -80,7 +80,8 @@ model Deliverable {
   title       String
   fileType    String            // PDF, DOCX, VIDEO, LINK
   fileUrl     String            // Secure storage path or URL
-  status      DeliverableStatus @default(PENDING)
+  status      DeliverableStatus @default(PENDIENTE)
+
 
   // Team relationship
   teamId      String

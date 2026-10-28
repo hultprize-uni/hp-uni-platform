@@ -1,11 +1,11 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('APPLICANT', 'JUDGE', 'ADMIN');
+CREATE TYPE "Role" AS ENUM ('POSTULANTE', 'JURADO', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "DeliverableStatus" AS ENUM ('PENDING', 'UPLOADED', 'RECEIVED');
+CREATE TYPE "DeliverableStatus" AS ENUM ('PENDIENTE', 'SUBIDO', 'RECIBIDO');
 
 -- CreateEnum
-CREATE TYPE "PartnerType" AS ENUM ('SPONSOR', 'COMMUNITY');
+CREATE TYPE "PartnerType" AS ENUM ('SPONSOR', 'ALIADO');
 
 -- CreateTable
 CREATE TABLE "users" (
@@ -14,7 +14,7 @@ CREATE TABLE "users" (
     "email" TEXT NOT NULL,
     "universityCode" TEXT,
     "phone" TEXT,
-    "role" "Role" NOT NULL DEFAULT 'APPLICANT',
+    "role" "Role" NOT NULL DEFAULT 'POSTULANTE',
     "isLeader" BOOLEAN NOT NULL DEFAULT false,
     "teamId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,7 +39,7 @@ CREATE TABLE "deliverables" (
     "title" TEXT NOT NULL,
     "fileType" TEXT NOT NULL,
     "fileUrl" TEXT NOT NULL,
-    "status" "DeliverableStatus" NOT NULL DEFAULT 'PENDING',
+    "status" "DeliverableStatus" NOT NULL DEFAULT 'PENDIENTE',
     "teamId" TEXT NOT NULL,
     "uploadedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
