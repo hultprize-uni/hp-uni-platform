@@ -1,26 +1,17 @@
 # Progreso de autenticación SSR — John
 
-Documento de seguimiento incremental para el trabajo de John en la issue de autenticación SSR.
+Documento de seguimiento incremental para el trabajo de John (en coordinación con Jairo) en la Issue #4 de autenticación SSR y alta de jurados (`RF-27`, `RF-33`, `RF-37`, `RNF-04`).
 
-Las reglas permanentes de seguridad, alcance y colaboración se encuentran en `AGENTS.md`. Este archivo registra progreso y puede actualizarse durante la implementación.
+Las reglas permanentes de seguridad, alcance y colaboración se encuentran en `AGENTS.md`.
 
-## Reglas de seguimiento
-
-- Trabajar una tarea `J` a la vez.
-- Solicitar autorización antes de iniciar la siguiente tarea `J`.
-- No registrar emails, contraseñas, tokens, claves, UUID de usuarios ni valores de `.env`.
-- No modificar el trabajo de Jairo salvo una necesidad de integración acordada.
-- No hacer commits, push, merges ni Pull Requests sin autorización explícita.
-- Una tarea técnica no se considera terminada si fallan las verificaciones que le correspondan.
-
-## Contrato confirmado
+## Contrato confirmado y acuerdos de equipo
 
 - Entorno actual: proyecto Supabase DEV.
-- Fuente de autorización: `app_metadata.role`.
-- Roles reconocidos en esta issue: `ADMIN` y `JURADO`.
-- `POSTULANTE` y cualquier valor ausente o desconocido no acceden a `/admin` ni `/jurado`.
-- La vinculación futura entre `auth.users.id` y el modelo Prisma `User` está fuera del alcance de esta issue.
-- La sincronización futura entre el rol de Prisma y `app_metadata.role` está fuera del alcance de esta issue.
+- Fuente de autorización: `app_metadata.role` validado en servidor mediante `supabase.auth.getUser()`.
+- Roles unificados en español y mayúsculas (tanto en Supabase Auth como en Prisma `enum Role`): `ADMIN`, `JURADO`, `POSTULANTE`.
+- Un único formulario de inicio de sesión en `/login` con redirección automática por rol (`ADMIN` → `/admin`, `JURADO` → `/jurado`, `POSTULANTE` → `/`).
+- Alta de jurados (`RF-37`) activa mediante Server Action exclusiva para `ADMIN` (`app/admin/jurados/actions.ts`), vinculando `User.id` en Prisma con `auth.users.id` de Supabase Auth.
+- Estrategia de ramas: `feature/auth-ssr-john` y `feature/auth-login-jairo` se unen en `feature/auth-ssr-integration` y de ahí se abre PR hacia `dev`.
 
 ## Fase 0 — Alineación
 
@@ -28,117 +19,93 @@ Las reglas permanentes de seguridad, alcance y colaboración se encuentran en `A
 - [x] 0.2 Verificar el baseline local.
 - [x] 0.3 Confirmar que las variables locales apuntan al proyecto Supabase DEV.
 - [x] 0.4 Crear y confirmar usuarios de prueba `ADMIN` y `JURADO` en Supabase DEV.
-- [x] 0.5 Aprobar el contrato de roles `ADMIN` y `JURADO` con el líder.
+- [x] 0.5 Aprobar el contrato de roles `ADMIN`, `JURADO` y `POSTULANTE` en español y mayúsculas.
 - [x] 0.6 Asignar `app_metadata.role` a los usuarios de prueba en Supabase DEV.
-- [ ] 0.7 Acordar con Jairo la interfaz de los helpers de autenticación.
-- [ ] 0.8 Registrar la matriz compartida de casos de prueba.
-
-### Próximo paso
-
-Completar 0.7 con Jairo antes de implementar los helpers:
-
-- Acordar los nombres y responsabilidades de los clientes browser y server.
-- Acordar cómo consumirá Jairo el cliente browser desde el formulario de login.
-- Acordar que la lectura y validación del rol se centralizarán en `lib/auth/roles.ts`.
-- Evitar que Jairo duplique clientes, parsing de roles o decisiones de autorización.
+- [x] 0.7 Inspeccionar y unificar con Jairo la interfaz de los helpers de autenticación (`lib/supabase/*`, `lib/auth/*`).
+- [x] 0.8 Registrar la matriz compartida de casos de prueba (`docs/auth-test-matrix.md`).
 
 ## J1 — Preparar dependencias
 
-- [ ] J1.1 Revisar el estado de `package.json` y `package-lock.json`.
-- [ ] J1.2 Confirmar que no existe una instalación o arquitectura Supabase equivalente.
-- [ ] J1.3 Consultar la documentación local relevante de Next.js 16.
-- [ ] J1.4 Instalar `@supabase/ssr` y `@supabase/supabase-js`.
-- [ ] J1.5 Revisar el diff de dependencias y descartar cambios accidentales.
-- [ ] J1.6 Ejecutar las verificaciones aplicables.
-- [ ] J1.7 Documentar archivos modificados, prueba, resultado esperado y commit sugerido.
+- [x] J1.1 Revisar el estado de `package.json` y `package-lock.json`.
+- [x] J1.2 Confirmar e integrar la arquitectura de Supabase SSR y Prisma Client.
+- [x] J1.3 Consultar la documentación local relevante de Next.js 16 (`node_modules/next/dist/docs/`).
+- [x] J1.4 Instalar/configurar `@supabase/ssr`, `@supabase/supabase-js`, `server-only` y `@prisma/client`.
+- [x] J1.5 Revisar el diff de dependencias y configuración (`.env.example`, `.gitignore`, `tsconfig.json`).
+- [x] J1.6 Ejecutar las verificaciones aplicables.
+- [x] J1.7 Documentar archivos modificados.
 
 ## J2 — Cliente Supabase para browser
 
-- [ ] J2.1 Confirmar la interfaz que consumirá el login de Jairo.
-- [ ] J2.2 Crear `lib/supabase/client.ts` o reutilizar una implementación equivalente.
-- [ ] J2.3 Usar únicamente variables públicas permitidas.
-- [ ] J2.4 Verificar que ningún secreto llegue al cliente.
-- [ ] J2.5 Ejecutar las verificaciones aplicables y documentar el contrato de uso.
+- [x] J2.1 Confirmar la interfaz en `lib/supabase/client.ts` y `lib/supabase/config.ts`.
+- [x] J2.2 Crear `lib/supabase/client.ts` con `createBrowserClient`.
+- [x] J2.3 Usar únicamente variables públicas permitidas (`NEXT_PUBLIC_SUPABASE_URL` y clave pública).
+- [x] J2.4 Verificar que ningún secreto llegue al cliente.
+- [x] J2.5 Documentar el contrato de uso en `docs/api.md`.
 
 ## J3 — Cliente Supabase para server
 
-- [ ] J3.1 Revisar la API vigente de cookies en la documentación local de Next.js 16.
-- [ ] J3.2 Crear `lib/supabase/server.ts` o reutilizar una implementación equivalente.
-- [ ] J3.3 Integrar `createServerClient` con lectura y escritura segura de cookies.
-- [ ] J3.4 Considerar los contextos donde Server Components no pueden escribir cookies.
-- [ ] J3.5 Ejecutar las verificaciones aplicables y documentar el contrato de uso.
+- [x] J3.1 Revisar la API vigente de `cookies()` asíncrona en Next.js 16.
+- [x] J3.2 Crear `lib/supabase/server.ts` con `import "server-only"`.
+- [x] J3.3 Integrar `createServerClient` con lectura y escritura segura de cookies.
+- [x] J3.4 Manejar con `try/catch` los contextos donde Server Components no pueden escribir cookies.
+- [x] J3.5 Documentar el contrato de uso en `docs/api.md`.
 
 ## J4 — Actualización de sesión SSR
 
-- [ ] J4.1 Revisar el patrón vigente de Supabase SSR para actualización de sesión.
-- [ ] J4.2 Crear `lib/supabase/proxy.ts` o reutilizar una implementación equivalente.
-- [ ] J4.3 Copiar correctamente las cookies entre request y response.
-- [ ] J4.4 Validar la identidad mediante una API apropiada de Supabase.
-- [ ] J4.5 Evitar usar `getSession()` como decisión de autorización del servidor.
-- [ ] J4.6 Verificar renovación, errores seguros y ausencia de logs sensibles.
+- [x] J4.1 Revisar el patrón vigente de Supabase SSR para actualización de sesión.
+- [x] J4.2 Crear `lib/supabase/proxy.ts` (`updateSession`).
+- [x] J4.3 Copiar correctamente las cookies entre `request`, `response` y respuestas de redirección (`NextResponse.redirect`).
+- [x] J4.4 Validar la identidad mediante `supabase.auth.getUser()`.
+- [x] J4.5 Evitar usar `getSession()` como decisión de autorización del servidor.
+- [x] J4.6 Verificar renovación, errores seguros (503 fail-closed en paneles) y ausencia de logs sensibles.
 
 ## J5 — Proxy de Next.js
 
-- [ ] J5.1 Revisar la documentación local de `proxy.ts` y su configuración en Next.js 16.
-- [ ] J5.2 Crear el `proxy.ts` raíz.
-- [ ] J5.3 Conectar el helper de actualización de sesión.
-- [ ] J5.4 Definir un matcher que excluya assets y rutas que no necesitan interceptación.
-- [ ] J5.5 Confirmar que `/login` no produzca ciclos de redirección.
-- [ ] J5.6 Ejecutar las verificaciones aplicables.
+- [x] J5.1 Revisar la documentación local de `proxy.ts` en Next.js 16.
+- [x] J5.2 Crear el `proxy.ts` raíz exportando `proxy(request: NextRequest)`.
+- [x] J5.3 Conectar el helper `updateSession`.
+- [x] J5.4 Definir `config.matcher` para `/admin/:path*`, `/jurado/:path*` y `/login`.
+- [x] J5.5 Confirmar que `/login` no produzca ciclos de redirección.
+- [x] J5.6 Ejecutar las verificaciones aplicables.
 
 ## J6 — Contrato de roles
 
-- [ ] J6.1 Definir el tipo `Role` con `ADMIN | JURADO`.
-- [ ] J6.2 Crear `lib/auth/roles.ts` o reutilizar una implementación equivalente.
-- [ ] J6.3 Leer el rol exclusivamente desde `app_metadata.role` validado.
-- [ ] J6.4 Rechazar valores ausentes, `POSTULANTE` y valores desconocidos.
-- [ ] J6.5 Exponer helpers y constantes sin duplicar lógica entre John y Jairo.
-- [ ] J6.6 Ejecutar las verificaciones aplicables y documentar el contrato.
+- [x] J6.1 Definir el tipo `Role` (`"ADMIN" | "JURADO" | "POSTULANTE"`) y `PanelRole` (`"ADMIN" | "JURADO"`).
+- [x] J6.2 Crear `lib/auth/roles.ts`.
+- [x] J6.3 Leer el rol exclusivamente desde `app_metadata.role` validado.
+- [x] J6.4 Rechazar valores ausentes, en minúsculas o desconocidos en los paneles privados.
+- [x] J6.5 Exponer `parseRole`, `panelForRole`, `requiredPanelRole` y `accessRedirect`.
+- [x] J6.6 Ejecutar pruebas unitarias del contrato de roles (`tests/auth.test.mjs`).
 
 ## J7 — Protección por rol
 
-- [ ] J7.1 Redirigir usuarios no autenticados de `/admin` y `/jurado` hacia `/login`.
-- [ ] J7.2 Permitir `/admin` únicamente a `ADMIN`.
-- [ ] J7.3 Permitir `/jurado` únicamente a `JURADO`.
-- [ ] J7.4 Denegar el acceso cruzado entre ambos roles.
-- [ ] J7.5 Denegar usuarios autenticados sin un rol reconocido.
-- [ ] J7.6 Definir con Jairo el contrato de destinos y errores de redirección.
-- [ ] J7.7 Verificar URLs directas y ausencia de ciclos.
+- [x] J7.1 Redirigir usuarios no autenticados de `/admin` y `/jurado` hacia `/login`.
+- [x] J7.2 Permitir `/admin` únicamente a `ADMIN`.
+- [x] J7.3 Permitir `/jurado` únicamente a `JURADO`.
+- [x] J7.4 Redirigir el acceso cruzado entre ambos roles hacia su propio panel (`/admin` o `/jurado`).
+- [x] J7.5 Denegar usuarios autenticados sin un rol de panel válido (`/login?error=unauthorized`).
+- [x] J7.6 Unificar con Jairo el contrato de destinos y errores de redirección (`docs/adr/0002-auth-access-proposal.md`).
+- [x] J7.7 Verificar URLs directas, subrutas y ausencia de ciclos.
 
-## J8 — Protección server-side adicional
+## J8 — Protección server-side adicional y Alta de Jurados (RF-37)
 
-- [ ] J8.1 Identificar páginas, layouts o acciones privadas que requieran guard adicional.
-- [ ] J8.2 Implementar validación server-side sin depender únicamente del Proxy o de la UI.
-- [ ] J8.3 Reutilizar el contrato de roles de J6.
-- [ ] J8.4 Confirmar que las respuestas no filtren información sensible.
-- [ ] J8.5 Ejecutar las verificaciones aplicables.
+- [x] J8.1 Proteger layouts y páginas privadas (`app/admin/{layout,page}.tsx`, `app/jurado/{layout,page}.tsx`) con `requireRole`.
+- [x] J8.2 Implementar `getSessionUser` y `requireRole` en `lib/auth/session.ts` con `server-only` y React `cache`.
+- [x] J8.3 Integrar el esquema Prisma (`prisma/schema.prisma`, `lib/prisma.ts`) con `enum Role { POSTULANTE, JURADO, ADMIN }` y modelo `User`.
+- [x] J8.4 Conectar el adaptador Prisma en `lib/auth/jury-store.ts` y eliminar el hostname hardcodeado en `lib/supabase/admin.ts` para dejar activo el alta de jurados (`RF-37` en `app/admin/jurados/actions.ts`).
+- [x] J8.5 Ejecutar las verificaciones aplicables.
 
 ## J9 — Contrato de logout
 
-- [ ] J9.1 Definir una función o Server Action reutilizable para cerrar sesión.
-- [ ] J9.2 Evitar duplicar clientes o lógica en la interfaz de Jairo.
-- [ ] J9.3 Eliminar la sesión y redirigir de forma segura a `/login`.
-- [ ] J9.4 Verificar que volver atrás y refrescar no recupere acceso privado.
-- [ ] J9.5 Documentar para Jairo la interfaz de integración.
+- [x] J9.1 Implementar la Server Action `signOut` en `app/logout/actions.ts`.
+- [x] J9.2 Integrar con `components/auth/logout-button.tsx`.
+- [x] J9.3 Eliminar la sesión local (`signOut({ scope: "local" })`), revalidar caché y redirigir a `/login`.
+- [x] J9.4 Asegurar cabeceras `Cache-Control: private, no-store, max-age=0` en rutas protegidas.
+- [x] J9.5 Documentar la interfaz en `docs/api.md`.
 
 ## J10 — Pruebas técnicas
 
-- [ ] J10.1 Verificar acceso anónimo a `/admin` y `/jurado`.
-- [ ] J10.2 Verificar acceso correcto de `ADMIN` a `/admin`.
-- [ ] J10.3 Verificar que `ADMIN` no acceda a `/jurado`.
-- [ ] J10.4 Verificar acceso correcto de `JURADO` a `/jurado`.
-- [ ] J10.5 Verificar que `JURADO` no acceda a `/admin`.
-- [ ] J10.6 Verificar rechazo de usuarios sin rol o con rol desconocido.
-- [ ] J10.7 Verificar persistencia y renovación de sesión.
-- [ ] J10.8 Verificar sesión expirada y logout.
-- [ ] J10.9 Verificar actualización del permiso después de renovar el JWT.
-- [ ] J10.10 Ejecutar `npm run lint`.
-- [ ] J10.11 Ejecutar `npm run build`.
-- [ ] J10.12 Registrar resultados y evidencias sin datos sensibles.
-
-## Historial de decisiones
-
-- El líder confirmó que los valores compartidos de rol serán `ADMIN`, `JURADO` y, fuera del alcance actual, `POSTULANTE`.
-- Para esta issue, la autorización usa `app_metadata.role` y reconoce solamente `ADMIN` y `JURADO`.
-- Se utilizará `proxy.ts` por la convención vigente de Next.js 16.
-- No se copiará ni modificará el schema Prisma desarrollado en otra rama.
+- [x] J10.1 Ejecutar pruebas unitarias (`npm run test:auth` — 27/27 en verde).
+- [x] J10.2 Ejecutar `npm run lint` y `npm run typecheck`.
+- [x] J10.3 Ejecutar `npm run build`.
+- [ ] J10.4 Completar matriz de pruebas con sesiones reales (`ADMIN`, `JURADO`, sin rol) y alta de jurado en Supabase DEV (`docs/auth-test-matrix.md`).
