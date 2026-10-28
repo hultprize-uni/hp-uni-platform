@@ -1,20 +1,20 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('POSTULANTE', 'JURADO', 'ADMIN');
+CREATE TYPE "Role" AS ENUM ('APPLICANT', 'JUDGE', 'ADMIN');
 
 -- CreateEnum
-CREATE TYPE "DeliverableStatus" AS ENUM ('PENDIENTE', 'SUBIDO', 'RECIBIDO');
+CREATE TYPE "DeliverableStatus" AS ENUM ('PENDING', 'UPLOADED', 'RECEIVED');
 
 -- CreateEnum
-CREATE TYPE "PartnerType" AS ENUM ('SPONSOR', 'COMUNIDAD');
+CREATE TYPE "PartnerType" AS ENUM ('SPONSOR', 'COMMUNITY');
 
 -- CreateTable
 CREATE TABLE "users" (
-    "id" TEXT NOT NULL,
+    "id" UUID NOT NULL,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "uniCode" TEXT,
+    "universityCode" TEXT,
     "phone" TEXT,
-    "role" "Role" NOT NULL DEFAULT 'POSTULANTE',
+    "role" "Role" NOT NULL DEFAULT 'APPLICANT',
     "isLeader" BOOLEAN NOT NULL DEFAULT false,
     "teamId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -39,7 +39,7 @@ CREATE TABLE "deliverables" (
     "title" TEXT NOT NULL,
     "fileType" TEXT NOT NULL,
     "fileUrl" TEXT NOT NULL,
-    "status" "DeliverableStatus" NOT NULL DEFAULT 'PENDIENTE',
+    "status" "DeliverableStatus" NOT NULL DEFAULT 'PENDING',
     "teamId" TEXT NOT NULL,
     "uploadedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -107,7 +107,7 @@ CREATE TABLE "rubric_criteria" (
 -- CreateTable
 CREATE TABLE "evaluations" (
     "id" TEXT NOT NULL,
-    "juradoId" TEXT NOT NULL,
+    "judgeId" UUID NOT NULL,
     "teamId" TEXT NOT NULL,
     "rubricId" TEXT NOT NULL,
     "feedback" TEXT,
@@ -129,14 +129,24 @@ CREATE TABLE "evaluation_scores" (
     CONSTRAINT "evaluation_scores_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
+-- CreateIndex (Unique)
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 
--- CreateIndex
-CREATE UNIQUE INDEX "evaluations_juradoId_teamId_rubricId_key" ON "evaluations"("juradoId", "teamId", "rubricId");
+-- CreateIndex (Unique)
+CREATE UNIQUE INDEX "evaluations_judgeId_teamId_rubricId_key" ON "evaluations"("judgeId", "teamId", "rubricId");
 
--- CreateIndex
+-- CreateIndex (Unique)
 CREATE UNIQUE INDEX "evaluation_scores_evaluationId_criterionId_key" ON "evaluation_scores"("evaluationId", "criterionId");
+
+-- CreateIndex (Foreign Key Indexes)
+CREATE INDEX "users_teamId_idx" ON "users"("teamId");
+CREATE INDEX "deliverables_teamId_idx" ON "deliverables"("teamId");
+CREATE INDEX "rubric_criteria_rubricId_idx" ON "rubric_criteria"("rubricId");
+CREATE INDEX "evaluations_judgeId_idx" ON "evaluations"("judgeId");
+CREATE INDEX "evaluations_teamId_idx" ON "evaluations"("teamId");
+CREATE INDEX "evaluations_rubricId_idx" ON "evaluations"("rubricId");
+CREATE INDEX "evaluation_scores_evaluationId_idx" ON "evaluation_scores"("evaluationId");
+CREATE INDEX "evaluation_scores_criterionId_idx" ON "evaluation_scores"("criterionId");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "teams"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -148,7 +158,7 @@ ALTER TABLE "deliverables" ADD CONSTRAINT "deliverables_teamId_fkey" FOREIGN KEY
 ALTER TABLE "rubric_criteria" ADD CONSTRAINT "rubric_criteria_rubricId_fkey" FOREIGN KEY ("rubricId") REFERENCES "rubrics"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "evaluations" ADD CONSTRAINT "evaluations_juradoId_fkey" FOREIGN KEY ("juradoId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "evaluations" ADD CONSTRAINT "evaluations_judgeId_fkey" FOREIGN KEY ("judgeId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "evaluations" ADD CONSTRAINT "evaluations_teamId_fkey" FOREIGN KEY ("teamId") REFERENCES "teams"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -7,50 +7,52 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
 // ==========================================
 // ENUMS
 // ==========================================
 
 enum Role {
-  POSTULANTE
-  JURADO
+  APPLICANT
+  JUDGE
   ADMIN
 }
 
 enum DeliverableStatus {
-  PENDIENTE
-  SUBIDO
-  RECIBIDO
+  PENDING
+  UPLOADED
+  RECEIVED
 }
 
 enum PartnerType {
   SPONSOR
-  COMUNIDAD
+  COMMUNITY
 }
 
 // ==========================================
-// USUARIOS Y EQUIPOS
+// USERS & TEAMS
 // ==========================================
 
 model User {
-  id        String   @id @default(uuid())
+  id        String   @id @db.Uuid // Must receive the UUID from Supabase Auth (auth.users.id)
   name      String
   email     String   @unique
-  uniCode   String?  // Código UNI (obligatorio al menos 1 por equipo)
+  universityCode String? // UNI student code (at least 1 required per team)
   phone     String?
-  role      Role     @default(POSTULANTE)
-  isLeader  Boolean  @default(false) // Indica si es el líder del equipo
+  role      Role     @default(APPLICANT)
+  isLeader  Boolean  @default(false) // Whether this user is the team leader
 
-  // Relación con el Equipo
+  // Team relationship
   teamId    String?
   team      Team?    @relation("TeamMembers", fields: [teamId], references: [id], onDelete: SetNull)
 
-  // Relaciones como Jurado
-  evaluationsGiven Evaluation[] @relation("JuradoEvaluations")
+  // Relationships as Judge
+  evaluationsGiven Evaluation[] @relation("JudgeEvaluations")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@index([teamId])
   @@map("users")
 }
 
@@ -58,7 +60,7 @@ model Team {
   id        String   @id @default(uuid())
   name      String
 
-  // Relaciones
+  // Relationships
   members      User[]        @relation("TeamMembers")
   deliverables Deliverable[]
   evaluations  Evaluation[]
@@ -70,17 +72,17 @@ model Team {
 }
 
 // ==========================================
-// ENTREGABLES
+// DELIVERABLES
 // ==========================================
 
 model Deliverable {
   id          String            @id @default(uuid())
   title       String
   fileType    String            // PDF, DOCX, VIDEO, LINK
-  fileUrl     String            // Ruta o URL de almacenamiento seguro
-  status      DeliverableStatus @default(PENDIENTE)
+  fileUrl     String            // Secure storage path or URL
+  status      DeliverableStatus @default(PENDING)
 
-  // Relación con Equipo
+  // Team relationship
   teamId      String
   team        Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
@@ -88,11 +90,12 @@ model Deliverable {
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
+  @@index([teamId])
   @@map("deliverables")
 }
 
 // ==========================================
-// CMS: CRONOGRAMA Y ALIADOS
+// CMS: TIMELINE & PARTNERS
 // ==========================================
 
 model TimelineEvent {
@@ -115,7 +118,7 @@ model Partner {
   name        String
   logoUrl     String
   type        PartnerType @default(SPONSOR)
-  category    String?     // Gold, Silver, Aliado Estratégico, etc.
+  category    String?     // Gold, Silver, Strategic Ally, etc.
   websiteUrl  String?
   order       Int         @default(0)
 
@@ -126,7 +129,7 @@ model Partner {
 }
 
 // ==========================================
-// EVALUACIÓN Y RÚBRICAS (JURADO)
+// EVALUATION & RUBRICS (JUDGES)
 // ==========================================
 
 model Rubric {
@@ -135,7 +138,7 @@ model Rubric {
   description String?           @db.Text
   isActive    Boolean           @default(true)
 
-  // Relaciones
+  // Relationships
   criteria    RubricCriterion[]
   evaluations Evaluation[]
 
@@ -155,40 +158,44 @@ model RubricCriterion {
   maxScore    Float
   order       Int               @default(0)
 
-  // Relaciones
+  // Relationships
   scores      EvaluationScore[]
 
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
+  @@index([rubricId])
   @@map("rubric_criteria")
 }
 
 model Evaluation {
   id          String            @id @default(uuid())
 
-  // Jurado que evalúa
-  juradoId    String
-  jurado      User              @relation("JuradoEvaluations", fields: [juradoId], references: [id], onDelete: Cascade)
+  // Judge who evaluates
+  judgeId     String            @db.Uuid
+  judge       User              @relation("JudgeEvaluations", fields: [judgeId], references: [id], onDelete: Cascade)
 
-  // Equipo evaluado
+  // Team being evaluated
   teamId      String
   team        Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  // Rúbrica utilizada
+  // Rubric used
   rubricId    String
   rubric      Rubric            @relation(fields: [rubricId], references: [id])
 
   feedback    String?           @db.Text
-  isCompleted Boolean           @default(false) // Permite guardado parcial o borrador
+  isCompleted Boolean           @default(false) // Allows partial save / draft mode
 
-  // Puntajes por criterio
+  // Scores per criterion
   scores      EvaluationScore[]
 
   createdAt   DateTime          @default(now())
   updatedAt   DateTime          @updatedAt
 
-  @@unique([juradoId, teamId, rubricId])
+  @@unique([judgeId, teamId, rubricId])
+  @@index([judgeId])
+  @@index([teamId])
+  @@index([rubricId])
   @@map("evaluations")
 }
 
@@ -204,5 +211,7 @@ model EvaluationScore {
   comments     String?         @db.Text
 
   @@unique([evaluationId, criterionId])
+  @@index([evaluationId])
+  @@index([criterionId])
   @@map("evaluation_scores")
 }
