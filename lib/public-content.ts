@@ -2,6 +2,7 @@
 export type TeamProfile = { id: string; group: 'campus' | 'area'; role: string; name: string | null; photo: string | null; linkedin: string | null }
 // Proposed 2 + 4 layout. Names and final number await confirmation.
 export const TEAM_PROFILES: TeamProfile[] = [
+  { id: 'diego-pinedo', group: 'area', role: 'Director de TI', name: 'Diego Pinedo', photo: '/equipo/diego-pinedo.png', linkedin: 'https://www.linkedin.com/in/diego-alonso-pinedo-aponte-998ab1351/' },
   { id: 'campus-1', group: 'campus', role: 'Dirección de campus', name: null, photo: null, linkedin: null },
   { id: 'campus-2', group: 'campus', role: 'Dirección de campus', name: null, photo: null, linkedin: null },
   ...Array.from({ length: 4 }, (_, i): TeamProfile => ({ id: `area-${i + 1}`, group: 'area', role: 'Dirección de área', name: null, photo: null, linkedin: null })),

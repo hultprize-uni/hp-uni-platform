@@ -14,20 +14,26 @@ export function WinnersSection() {
   }
 
   const publishedWinners = WINNERS_2026.filter(winner => !winner.name.toLowerCase().includes('por confirmar') && !winner.project.toLowerCase().includes('por confirmar'))
-  if (!publishedWinners.length) return <section id="ganadores" className="border-y border-white/10 bg-brand-ink py-7"><div className="mx-auto flex max-w-7xl flex-col gap-3 px-5 sm:px-8 md:flex-row md:items-center md:justify-between"><h2 className="text-xl font-semibold text-white">Las ideas de la edición 2026.</h2><p className="max-w-2xl text-sm leading-relaxed text-white/60">Los proyectos reconocidos y las historias de sus equipos se publicarán cuando se validen los resultados oficiales.</p></div></section>
+  const isExample = publishedWinners.length === 0
+  const winners = isExample ? WINNERS_2026.map((winner, index) => ({
+    ...winner,
+    name: ['Equipo del primer puesto', 'Equipo del segundo puesto', 'Equipo del tercer puesto'][index],
+    project: 'Nombre del proyecto',
+    description: 'Aquí irá una frase breve sobre la solución y el impacto del proyecto.',
+  })) : publishedWinners
 
   return (
-    <section id="ganadores" className="bg-brand-ink py-20 sm:py-28">
+    <section id="ganadores" className="bg-brand-ink py-12 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-8">
         <SectionHeading
           eyebrow="Edición 2026"
-          title="Equipos ganadores"
-          description="Conoce las propuestas reconocidas en la edición anterior. Los perfiles se completarán al validar los resultados oficiales."
+          title="Ganadores de la edición anterior."
+          description={isExample ? "Vista de ejemplo · nombres, proyectos y resultados por confirmar. Las fotos muestran el formato propuesto." : "Conoce las propuestas reconocidas en la edición anterior."}
         />
-        <ol className="mt-12 grid gap-5 md:grid-cols-3">
-          {publishedWinners.map((winner) => (
+        <ol className="mt-8 grid gap-5 md:grid-cols-3">
+          {winners.map((winner) => (
             <li key={winner.place}>
-              <article className="h-full border border-white/10 bg-white/[0.03]">
+              <article className="interactive-card h-full overflow-hidden rounded-lg border border-brand-pink/25 bg-white/[0.03]">
                 <div className="relative aspect-[4/3] overflow-hidden bg-[#201d2e]">
                   {missingPhotos.includes(winner.photo) ? (
                     <div className="absolute inset-0 flex items-end bg-[linear-gradient(135deg,#292563_0%,#191919_60%,#8a2899_140%)] p-5">
@@ -36,7 +42,7 @@ export function WinnersSection() {
                   ) : (
                     <Image
                       src={winner.photo}
-                      alt={`Fotografía de ${winner.name}, ${winner.place}`}
+                      alt={isExample ? `Foto de referencia para la tarjeta de ${winner.place}` : `Fotografía de ${winner.name}, ${winner.place}`}
                       width={800}
                       height={600}
                       loading="lazy"
@@ -49,9 +55,9 @@ export function WinnersSection() {
                     {winner.place}
                   </span>
                 </div>
-                <div className="p-5">
+                <div className="p-5 text-center">
                   <h3 className="text-xl font-semibold text-white">{winner.name}</h3>
-                  <p className="mt-1 text-sm font-medium text-brand-cyan">{winner.project}</p>
+                  <p className="mt-1 text-sm font-medium text-brand-pink-3">{winner.project}</p>
                   <p className="mt-3 text-sm leading-relaxed text-white/65">{winner.description}</p>
                   {winner.linkedinUrl ? (
                     <a
@@ -63,9 +69,9 @@ export function WinnersSection() {
                       <Share2 className="size-4" aria-hidden="true" />
                       Ver perfil en LinkedIn
                     </a>
-                  ) : (
+                  ) : !isExample ? (
                     <p className="mt-5 text-xs text-white/45">Perfil de LinkedIn por confirmar</p>
-                  )}
+                  ) : null}
                 </div>
               </article>
             </li>
