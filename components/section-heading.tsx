@@ -4,7 +4,7 @@ export function SectionHeading({
   eyebrow,
   title,
   description,
-  align = 'left',
+  align = 'center',
   className,
 }: {
   eyebrow?: string
@@ -16,7 +16,7 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        'max-w-2xl',
+        'w-full',
         align === 'center' && 'mx-auto text-center',
         className,
       )}
@@ -27,11 +27,11 @@ export function SectionHeading({
         </p>
       ) : null}
       {/* El título de sección es el elemento tipográfico más grande y de mayor contraste */}
-      <h2 className="text-balance text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
+      <h2 className="text-pretty text-3xl font-bold leading-tight tracking-tight text-white sm:text-4xl lg:text-5xl">
         {title}
       </h2>
       {description ? (
-        <p className="mt-4 text-pretty text-base leading-relaxed text-white/65 sm:text-lg">
+        <p className="mx-auto mt-4 max-w-3xl text-pretty text-base leading-relaxed text-white/65 sm:text-lg">
           {description}
         </p>
       ) : null}

@@ -10,19 +10,16 @@ const REQUIREMENTS = [
     photo: 'DSC05426', alt: 'Participantes reunidos en la UNI',
     title: 'Equipos de 1 a 4 personas',
     body: 'Participa solo o con hasta tres personas más.',
-    highlight: '1–4',
   },
   {
     photo: 'hero-4', alt: 'Estudiantes en el auditorio de la UNI',
     title: 'Mínimo 1 estudiante UNI',
     body: 'Al menos una persona matriculada en la UNI.',
-    highlight: '≥ 1 UNI',
   },
   {
     photo: 'DSC05401', alt: 'Presentación de una solución para reducir residuos',
     title: 'Alineado con los ODS',
     body: 'Una propuesta que aporte a los Objetivos de Desarrollo Sostenible.',
-    highlight: 'ODS',
   },
 ]
 
@@ -40,13 +37,10 @@ export function RequirementsSection() {
           {REQUIREMENTS.map((req) => (
             <div
               key={req.title}
-              className="flex flex-col rounded-lg border border-white/10 bg-white/[0.03] p-7"
+              className="interactive-card flex flex-col items-center text-center rounded-lg border border-white/10 bg-white/[0.03] p-7"
             >
-              <div className="flex items-center justify-between">
-                <div className="photo-reveal relative h-28 w-40 overflow-hidden rounded-md"><Image src={`/fotos/${req.photo}.webp`} alt={req.alt} fill sizes="160px" className="object-cover" /></div>
-                <span className="rounded-lg bg-white/5 px-3 py-1 font-mono text-sm font-semibold text-brand-cyan">
-                  {req.highlight}
-                </span>
+              <div className="flex w-full justify-center">
+                <div className="photo-reveal relative aspect-[4/3] w-full max-w-sm overflow-hidden rounded-md"><Image src={`/fotos/${req.photo}.webp`} alt={req.alt} fill sizes="(max-width: 767px) 85vw, 360px" className="object-cover" /></div>
               </div>
               <h3 className="mt-5 text-lg font-semibold text-white">
                 {req.title}
@@ -58,7 +52,7 @@ export function RequirementsSection() {
           ))}
         </div>
 
-        <div className="mt-8 flex flex-col items-start gap-4 rounded-lg border border-brand-pink/30 bg-brand-pink/10 p-7 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col items-center gap-5 text-center rounded-lg border border-brand-pink/30 bg-brand-pink/10 p-7">
           <p className="text-lg font-medium text-white">
             ¿Listo para empezar?
           </p>
@@ -66,7 +60,7 @@ export function RequirementsSection() {
             render={<Link href={REGISTRATION_URL} />}
             nativeButton={false}
             size="lg"
-            className="h-12 shrink-0 bg-brand-pink px-6 text-base text-brand-ink hover:bg-brand-pink-2"
+            className="min-h-16 w-full max-w-sm shrink-0 bg-brand-pink px-10 py-4 text-lg font-bold text-brand-ink hover:bg-brand-pink-2"
           >
             Inscribir Equipo
             <ArrowRight className="size-5" aria-hidden="true" />

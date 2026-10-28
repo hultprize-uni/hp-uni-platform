@@ -10,13 +10,10 @@ export function BootcampSection() {
           title="Aprende. Prueba. Presenta."
           description="Bootcamp · programa por confirmar."
         />
-        <ol className="mt-10 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">
+        <ol className="mt-10 grid gap-px border border-white/10 bg-white/10 sm:grid-cols-2 md:grid-cols-4">
           {BOOTCAMP_MODULES.map((module) => (
-            <li key={module.number} className="bg-brand-ink p-6">
-              <span className="font-mono text-sm font-semibold text-brand-pink">
-                {module.number}
-              </span>
-              <h3 className="mt-6 text-lg font-semibold text-white">{module.title}</h3>
+            <li key={module.number} className="interactive-card grid grid-rows-[auto_1fr] bg-brand-ink p-6 text-center">
+              <h3 className="flex min-h-14 items-start justify-center text-lg font-semibold leading-7 text-white">{module.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-white/65">{module.body}</p>
             </li>
           ))}
