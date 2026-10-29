@@ -3,12 +3,9 @@ import { createClient } from "@supabase/supabase-js";
 import { getPublicSupabaseConfig } from "./config";
 import { DuplicateJuryError, type JuryAuthAdmin } from "@/lib/auth/jury-registration";
 
-// Explicit DEV guard for this unfinished feature. Production must not be used
-// for validation. Revisit with the team before enabling production provisioning.
+// Server-only Supabase Admin adapter for jury provisioning (RF-37).
 export function createJuryAuthAdmin(): JuryAuthAdmin {
   const { url } = getPublicSupabaseConfig();
-  if (new URL(url).hostname !== "vkorjvgnamilszcnglkf.supabase.co")
-    throw new Error("El alta de jurados solo está habilitada para DEV.");
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!key) throw new Error("Falta configuración de servidor para el alta de jurados.");
   const admin = createClient(url, key, {

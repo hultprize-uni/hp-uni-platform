@@ -28,11 +28,8 @@ pruebas exitosas de login, persistencia, renovación, logout real o alta de jura
 | Jurado de prueba | `JURADO` | Probar acceso a `/jurado` |
 | Usuario sin rol | (ninguno) | Probar "autenticado pero sin permiso" |
 
-Los roles de Auth se escriben en **mayúsculas**: `POSTULANTE`, `JURADO`, `ADMIN`.
-No coinciden con el enum publicado por BD (`APPLICANT`, `JUDGE`, `ADMIN`) en
-`c6e51bfc8cf47ec56962701423bbed02acb4be21`. El PR #6 sigue abierto; la correspondencia
-y el vínculo mediante `User.id` (UUID de Auth, sin `authUserId` separado) están pendientes
-de coordinación e integración. Esta matriz no demuestra compatibilidad con ese esquema.
+Los roles de Auth y del esquema Prisma (`enum Role`) se escriben en **mayúsculas y en español**: `POSTULANTE`, `JURADO`, `ADMIN`.
+El vínculo de identidad se realiza asignando el UUID de Supabase Auth (`auth.users.id`) directamente en `User.id` (`@id @db.Uuid`).
 
 ## Cómo probar
 - Para sesiones simultáneas independientes, usar **navegadores distintos o perfiles separados**.
@@ -124,7 +121,7 @@ de coordinación e integración. Esta matriz no demuestra compatibilidad con ese
 | Roles cruzados, ausente, desconocido, POSTULANTE | ✅ unitarias; ⏳ sesiones reales DEV |
 | Alta sin ADMIN | Guard `requireRole("ADMIN")` revisado en código; ⏳ prueba de Server Action con sesión real |
 | Alta válida, duplicado, fallo al vincular, fallo al asignar rol, fallo al compensar | ✅ unitarias con dobles de prueba; ⏳ integración DEV |
-| Alta vinculada a Prisma | ⏳ schema local sin `User`; acordar/integrar contrato BD, vínculo vía `User.id` propuesto y correspondencia de roles; no se exige columna `authUserId` |
+| Alta vinculada a Prisma | ✅ Adaptador Prisma (`lib/auth/jury-store.ts`) conectado al modelo `User` con `Role.JURADO` y `User.id = authUserId`; ⏳ prueba real en DEV |
 | Clave privilegiada para alta | ⏳ no configurada; no se intentó crear ninguna cuenta |
 | Renovación, persistencia, logout real | ⏳ faltan cuentas DEV disponibles de forma segura |
 | Caché de paneles y subrutas | ✅ HTTP: respuestas `private, no-store` |

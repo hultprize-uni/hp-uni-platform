@@ -1,8 +1,8 @@
-# Autenticación SSR (entrega local parcial de #4)
+# Autenticación SSR y Alta de Jurados (Issue #4)
 
-Actualizado: 27/10/2026. Next.js instalado 16.3.5, React 19.2.8,
+Actualizado: 28/10/2026. Next.js instalado 16.4.3, React 19.3.1,
 TypeScript 5.9.3, Prisma 5.22.0; agregados `@supabase/ssr` 0.12.7 y
-`@supabase/supabase-js` 2.118.0. Validación realizada con Node 24.18.0.
+`@supabase/supabase-js` 2.118.0.
 
 ## Interceptación en Next.js 16
 
@@ -43,39 +43,30 @@ incluidos redirects y subrutas, usan `X-Robots-Tag: noindex, nofollow`.
 Los layouts conservan metadata robots para el HTML autenticado. `noindex` no protege datos.
 
 Los roles se obtienen exclusivamente de `user.app_metadata.role` después de `getUser`.
-Nunca se usa `user_metadata` para permisos. La política propuesta está en
+Nunca se usa `user_metadata` para permisos. La política acordada está en
 `docs/adr/0002-auth-access-proposal.md`. No hay caché global de identidades;
 React `cache` solo evita comprobaciones duplicadas dentro del render de una petición.
 
-## Alta de jurados: bloqueo explícito
+## Alta de jurados (RF-37)
 
-La Server Action `app/admin/jurados/actions.ts:createJury` exige ADMIN antes de
-cualquier operación. El proveedor `getJuryUserStore` está deshabilitado: el esquema
-local no tiene modelos. La propuesta BD del commit `c6e51bfc8cf47ec56962701423bbed02acb4be21`
-usa `User.id` como UUID de Auth, sin campo `authUserId` separado; el PR #6 sigue abierto.
-Falta acordar e integrar ese contrato, no necesariamente añadir otra columna.
-Auth mantiene `POSTULANTE/JURADO/ADMIN`; BD publica `APPLICANT/JUDGE/ADMIN`.
-También está pendiente que BD revise `Role.POSTULANTE` y `uniCode` en su `lib/auth.ts`
-frente a `APPLICANT` y `universityCode` en su esquema. No se adapta el código local todavía.
-No se inventan tablas, campos, SQL ni conversiones `as any`.
+La Server Action `app/admin/jurados/actions.ts:createJury` exige `ADMIN` antes de
+cualquier operación. El proveedor `getJuryUserStore` (`lib/auth/jury-store.ts`)
+utiliza Prisma (`lib/prisma.ts`) contra el modelo `User` (`users`), vinculando `User.id`
+con el UUID de Supabase Auth (`auth.users.id`) y el enum unificado `Role` (`POSTULANTE`, `JURADO`, `ADMIN`).
+El adaptador `lib/supabase/admin.ts` utiliza `SUPABASE_SERVICE_ROLE_KEY` exclusivamente en el servidor
+y sin URLs de proyecto hardcodeadas.
 
-Se prepararon un contrato `JuryUserStore`, la orquestación y el adaptador real de
-Supabase Admin (solo servidor). Hasta integrar el adaptador tipado de Prisma,
-la acción responde `DEPENDENCY_UNAVAILABLE` sin crear una cuenta Auth.
-La UI de gestión de jurados corresponde al squad de #12; deberá importar esta acción.
-Una acción aún no importada por una ruta no constituye un endpoint probado del build.
+La UI de gestión de jurados corresponde al squad de #12 y deberá importar `createJury`.
 
-Estrategia prevista y probada solo con dobles: verificar duplicado; crear Auth sin rol;
-crear vínculo DB atómico con el rol acordado (JURADO en el contrato Auth provisional);
-asignar rol Auth al final. Ante fallo, eliminar
-primero la cuenta Auth recién creada y luego su vínculo DB. Si falla la compensación,
-se requiere conciliación manual; no hay éxito falso ni reintento automático.
-El adaptador intenta además quitar el rol y bloquear la cuenta si falla su eliminación.
-Ante timeout durante creación, no se adopta ni elimina una cuenta por coincidencia de correo.
-Ver requisitos de conciliación en `docs/auth-delivery.md`.
+Estrategia de orquestación (`lib/auth/jury-registration.ts`):
+1. Verificar duplicado en BD (`existsByEmail`);
+2. Crear cuenta en Supabase Auth sin rol (`createWithoutRole`);
+3. Crear vínculo atómico en BD con `role: "JURADO"` (`createLinked`);
+4. Asignar `app_metadata.role = "JURADO"` en Supabase Auth al final (`grantJuryRole`).
+Ante fallo en los pasos 3 o 4, se elimina primero la cuenta Auth recién creada y luego su vínculo DB (`ROLLED_BACK`).
+Si falla la compensación, se devuelve `RECONCILIATION_REQUIRED` y el adaptador intenta quitar el rol y banear la cuenta.
 
 Fuentes oficiales consultadas:
 - [Supabase: clientes SSR y Proxy](https://supabase.com/docs/guides/auth/server-side/creating-a-client?queryGroups=framework&framework=nextjs)
 - [Supabase: validación con getUser](https://supabase.com/docs/reference/javascript/auth-getuser)
 - [Supabase: creación administrativa](https://supabase.com/docs/reference/javascript/auth-admin-createuser)
-- [Supabase: invitaciones](https://supabase.com/docs/reference/javascript/auth-admin-inviteuserbyemail)
