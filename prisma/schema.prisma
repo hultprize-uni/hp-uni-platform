@@ -7,3 +7,212 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
+
+// ==========================================
+// ENUMS
+// ==========================================
+
+enum Role {
+  POSTULANTE
+  JURADO
+  ADMIN
+}
+
+enum DeliverableStatus {
+  PENDIENTE
+  SUBIDO
+  RECIBIDO
+}
+
+enum PartnerType {
+  SPONSOR
+  ALIADO
+}
+
+// ==========================================
+// USERS & TEAMS
+// ==========================================
+
+model User {
+  id        String   @id @db.Uuid // Must receive the UUID from Supabase Auth (auth.users.id)
+  name      String
+  email     String   @unique
+  universityCode String? // UNI student code (at least 1 required per team)
+  phone     String?
+  role      Role      @default(POSTULANTE)
+  isLeader  Boolean  @default(false) // Whether this user is the team leader
+
+  // Team relationship
+  teamId    String?
+  team      Team?    @relation("TeamMembers", fields: [teamId], references: [id], onDelete: SetNull)
+
+  // Relationships as Judge
+  evaluationsGiven Evaluation[] @relation("JudgeEvaluations")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([teamId])
+  @@map("users")
+}
+
+model Team {
+  id        String   @id @default(uuid())
+  name      String
+
+  // Relationships
+  members      User[]        @relation("TeamMembers")
+  deliverables Deliverable[]
+  evaluations  Evaluation[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("teams")
+}
+
+// ==========================================
+// DELIVERABLES
+// ==========================================
+
+model Deliverable {
+  id          String            @id @default(uuid())
+  title       String
+  fileType    String            // PDF, DOCX, VIDEO, LINK
+  fileUrl     String            // Secure storage path or URL
+  status      DeliverableStatus @default(PENDIENTE)
+
+
+  // Team relationship
+  teamId      String
+  team        Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  uploadedAt  DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([teamId])
+  @@map("deliverables")
+}
+
+// ==========================================
+// CMS: TIMELINE & PARTNERS
+// ==========================================
+
+model TimelineEvent {
+  id          String   @id @default(uuid())
+  title       String
+  description String   @db.Text
+  date        DateTime
+  endDate     DateTime?
+  isBootcamp  Boolean  @default(false)
+  order       Int      @default(0)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("timeline_events")
+}
+
+model Partner {
+  id          String      @id @default(uuid())
+  name        String
+  logoUrl     String
+  type        PartnerType @default(SPONSOR)
+  category    String?     // Gold, Silver, Strategic Ally, etc.
+  websiteUrl  String?
+  order       Int         @default(0)
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("partners")
+}
+
+// ==========================================
+// EVALUATION & RUBRICS (JUDGES)
+// ==========================================
+
+model Rubric {
+  id          String            @id @default(uuid())
+  title       String
+  description String?           @db.Text
+  isActive    Boolean           @default(true)
+
+  // Relationships
+  criteria    RubricCriterion[]
+  evaluations Evaluation[]
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@map("rubrics")
+}
+
+model RubricCriterion {
+  id          String            @id @default(uuid())
+  rubricId    String
+  rubric      Rubric            @relation(fields: [rubricId], references: [id], onDelete: Cascade)
+
+  name        String
+  description String?           @db.Text
+  maxScore    Float
+  order       Int               @default(0)
+
+  // Relationships
+  scores      EvaluationScore[]
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([rubricId])
+  @@map("rubric_criteria")
+}
+
+model Evaluation {
+  id          String            @id @default(uuid())
+
+  // Judge who evaluates
+  judgeId     String            @db.Uuid
+  judge       User              @relation("JudgeEvaluations", fields: [judgeId], references: [id], onDelete: Cascade)
+
+  // Team being evaluated
+  teamId      String
+  team        Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  // Rubric used
+  rubricId    String
+  rubric      Rubric            @relation(fields: [rubricId], references: [id])
+
+  feedback    String?           @db.Text
+  isCompleted Boolean           @default(false) // Allows partial save / draft mode
+
+  // Scores per criterion
+  scores      EvaluationScore[]
+
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@unique([judgeId, teamId, rubricId])
+  @@index([judgeId])
+  @@index([teamId])
+  @@index([rubricId])
+  @@map("evaluations")
+}
+
+model EvaluationScore {
+  id           String          @id @default(uuid())
+  evaluationId String
+  evaluation   Evaluation      @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+
+  criterionId  String
+  criterion    RubricCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
+
+  score        Float
+  comments     String?         @db.Text
+
+  @@unique([evaluationId, criterionId])
+  @@index([evaluationId])
+  @@index([criterionId])
+  @@map("evaluation_scores")
+}
