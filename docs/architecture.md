@@ -1,6 +1,6 @@
 # Autenticación SSR y Alta de Jurados (Issue #4)
 
-Actualizado: 28/10/2026. Next.js instalado 16.4.3, React 19.3.1,
+Actualizado: 02/11/2026. Next.js instalado 16.3.5, React 19.2.8,
 TypeScript 5.9.3, Prisma 5.22.0; agregados `@supabase/ssr` 0.12.7 y
 `@supabase/supabase-js` 2.118.0.
 

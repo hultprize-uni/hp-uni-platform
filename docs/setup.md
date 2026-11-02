@@ -26,6 +26,7 @@ Mantenerlas en `.env` o `.env.local`, ignorados por Git:
    para pruebas. No quitar el rol al único `ADMIN` disponible; conservar una cuenta de recuperación.
 5. Authentication → URL Configuration: Site URL local habitual `http://localhost:3000`;
    Redirect URLs para localhost y el preview de dev.
+6. Protección contra contraseñas filtradas (*Leaked Password Protection*): en Supabase Auth (Authentication → Attack Protection / Providers → Email), esta función requiere el plan **Pro** de Supabase. En el plan gratuito (*Free Tier*) permanece desactivada y se registra en la Issue #14 como excepción conocida de entorno.
 
 ## Pruebas locales
 
