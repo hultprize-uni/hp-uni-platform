@@ -2,8 +2,7 @@
 ## Sprint 1: Módulo de Registro y Postulación de Equipos
 
 **Squad:** 4 - Fullstack (Lógica de Negocio y Conexión Cliente-Servidor)  
-**Líder / Mentor:** Leonel Cruzado  
-**Miembro Junior:** Adriano Navarro  
+**Integrantes** Leonel Cruzado, Adriano Navarro  
 **Objetivo del Sprint:** Implementar el flujo integral de inscripción individual y en equipo para la plataforma Hult Prize at UNI (`RF-20`, `RF-21`, `RF-22`, `RF-23` y `RNF-03`).
 
 ---
@@ -41,39 +40,38 @@
   - Manejo de excepciones controlado (detección de registros duplicados como error `P2002`).
   - Retorno de contrato estandarizado `ActionResult` (`{ success, message, data, errors }`).
 - [x] **Verificación y Compilación:**
-  - Verificación exitosa mediante `npx tsc --noEmit`.
-  - Push de la rama remota al repositorio de GitHub.
+  - Verificación inicial de tipos en la implementación backend (`npx tsc --noEmit` previo a la sincronización de `node_modules`).
+  - Push de la rama remota al repositorio de GitHub y sincronización posterior con `origin/dev` y `origin/feature/form-teams-register`.
 
 ---
 
 ## Tareas y Estado: Adriano Navarro (Junior / Frontend)
 
 ### Rama de Trabajo
-`feature/formulario-registro-equipos`  
-*(Creada a partir de `origin/feature/server-action-teams-register` o `dev` tras el merge)*
+`feature/form-teams-register`  
+*(Creada a partir de `feature/server-action-teams-register`, actualizada con `origin/dev` e integrada en `feature/server-action-teams-register` para el PR unificado del Issue `#3`)*
 
-### 📋 Entregables y Criterios de Aceptación:
-- [ ] **Configuración de Rama e Integración:**
-  - Descargar la rama remota con el esquema Zod y la Server Action ya preparados.
-- [ ] **Maquetación del Formulario (`RF-20`, `RNF-01`):**
-  - **Ruta sugerida:** `app/registro/page.tsx` (o componente `components/forms/register-team-form.tsx`).
-  - Maquetación responsive (Mobile, Tablet, Desktop) con Tailwind CSS y componentes de Shadcn/UI.
-  - Selector interactivo para alternar entre tipo `INDIVIDUAL` y `TEAM`.
-  - Condicional visual para el campo "Nombre del equipo" (obligatorio solo si es `TEAM`).
-- [ ] **Gestión Dinámica de Miembros (`RF-21`):**
-  - Implementar integración con `useFieldArray` de React Hook Form.
-  - Botón interactivo para **Agregar Integrante** (permitido hasta un máximo de 4 miembros).
-  - Botón interactivo para **Eliminar Integrante** (restringido para no permitir menos de 1 miembro).
-- [ ] **Integración de React Hook Form + Zod (`RNF-03`):**
-  - Conectar el formulario importando `teamRegistrationSchema` y `TeamRegistrationFormValues` desde `@/lib/validations/team-schema`.
-  - Mostrar feedback y mensajes de error en tiempo real debajo de cada campo si falla la validación.
-  - Mostrar alerta si no se cumple el requisito del integrante UNI.
-- [ ] **Conexión de Envío (Submit) con la Server Action (`RF-23`):**
-  - Importar e invocar `registerTeamAction` desde `@/lib/actions/team-registration`.
-  - Manejo de estados de carga (`isSubmitting` / estado de botón deshabilitado con spinner).
-  - Despliegue de mensaje de éxito o alerta de error según la respuesta de `registerTeamAction`.
-- [ ] **Pull Request:**
-  - Apertura de PR de la rama frontend hacia la rama `dev` para revisión por parte del Líder de Squad.
+### Entregables y Criterios de Aceptación:
+- [x] **Configuración de Rama e Integración:**
+  - Descarga de la rama backend, merge con `origin/dev` e instalación de `react-hook-form` y `@hookform/resolvers`.
+- [x] **Maquetación del Formulario (`RF-20`, `RNF-01`):**
+  - **Archivos:** `app/registro/page.tsx`, `components/forms/register-team-form.tsx` y componentes Shadcn UI (`components/ui/alert.tsx`, `card.tsx`, `input.tsx`, `label.tsx`, `radio-group.tsx`).
+  - Maquetación responsive con Tailwind CSS y Shadcn/UI.
+  - Selector interactivo (`RadioGroup`) para alternar entre `INDIVIDUAL` y `TEAM`.
+  - Condicional visual para el campo "Nombre del equipo" (limpieza automática al pasar a `INDIVIDUAL`).
+- [x] **Gestión Dinámica de Miembros (`RF-21`):**
+  - Integración con `useFieldArray` de React Hook Form.
+  - Botón para **Agregar Integrante** (hasta un máximo de 4 miembros).
+  - Botón para **Quitar** integrante (mínimo 1 miembro).
+- [x] **Integración de React Hook Form + Zod (`RNF-03`):**
+  - Conexión directa con `teamRegistrationSchema` y `TeamRegistrationFormValues` desde `@/lib/validations/team-schema` (`mode: "onTouched"`).
+  - Mensajes de error por campo (`FieldError`) y alerta grupal para la regla UNI.
+- [x] **Conexión de Envío (Submit) con la Server Action (`RF-23`):**
+  - Invocación de `registerTeamAction` desde `@/lib/actions/team-registration`.
+  - Estado de carga (`isSubmitting` con spinner) y alertas de éxito/error según la respuesta.
+- [ ] **Pull Request y Cierre de Issue (`#3`):**
+  - Apertura de PR unificado desde `feature/server-action-teams-register` hacia `dev` para revisión del encargado del área.
+  - Pendientes a revisar en etapas posteriores: conexión definitiva con los modelos de `prisma/schema.prisma` (cuando Squad 1 haga merge a `dev`), limpieza de `any` en `team-registration.ts` y ajustes de validación/correo de confirmación.
 
 ---
 
