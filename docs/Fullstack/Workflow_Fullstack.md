@@ -69,7 +69,7 @@
 - [x] **Conexión de Envío (Submit) con la Server Action (`RF-23`):**
   - Invocación de `registerTeamAction` desde `@/lib/actions/team-registration`.
   - Estado de carga (`isSubmitting` con spinner) y alertas de éxito/error según la respuesta.
-- [ ] **Pull Request y Cierre de Issue (`#3`):**
+- [x] **Pull Request y Cierre de Issue (`#3`):**
   - Apertura de PR unificado desde `feature/server-action-teams-register` hacia `dev` para revisión del encargado del área.
   - Pendientes a revisar en etapas posteriores: conexión definitiva con los modelos de `prisma/schema.prisma` (cuando Squad 1 haga merge a `dev`), limpieza de `any` en `team-registration.ts` y ajustes de validación/correo de confirmación.
 
