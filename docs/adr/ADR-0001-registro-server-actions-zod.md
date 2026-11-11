@@ -1,7 +1,7 @@
 # ADR 0001: Server Actions de Next.js, esquema Zod compartido y fallback temporal de Prisma para el registro de equipos
 
 * **Estado:** Aceptado
-* **Fecha:** 2026-11-11
+* **Fecha:** 2026-11-10
 * **Autores:** Leonel Cruzado, Adriano Navarro (Squad 4 - Fullstack)
 
 ## Contexto
