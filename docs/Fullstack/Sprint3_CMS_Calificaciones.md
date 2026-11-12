@@ -9,7 +9,9 @@
 ---
 
 ## Base de la rama
-Igual que el Sprint 2: `feature/server-action-teams-register` + merge de `feature/auth-ssr-integration` (para `requireRole` y el esquema Prisma). **Es independiente de la rama del Sprint 2**: se puede revisar y fusionar por separado. Si se fusionan ambas, solo hay que resolver dos conflictos triviales (una línea de `package.json` y el final de `.env.example`: quedarse con las dos partes).
+Igual que el Sprint 2: `feature/server-action-teams-register` + merge de `feature/auth-ssr-integration` (para `requireRole` y el esquema Prisma). **Es independiente de la rama del Sprint 2**: se puede revisar y fusionar por separado. Si se fusionan ambas, hay tres conflictos menores (comprobado):
+- `package.json` y `.env.example`: quedarse con las dos partes.
+- `lib/actions/team-registration.ts`: quedarse con la versión de este sprint (ya incluye el cambio de `ActionResult` del Sprint 2).
 
 ## Archivos
 | Archivo | Qué hace |
