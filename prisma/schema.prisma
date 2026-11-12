@@ -24,6 +24,12 @@ enum DeliverableStatus {
   RECIBIDO
 }
 
+enum DeliverableReview {
+  SIN_REVISAR
+  VALIDO
+  OBSERVADO
+}
+
 enum PartnerType {
   SPONSOR
   ALIADO
@@ -34,20 +40,21 @@ enum PartnerType {
 // ==========================================
 
 model User {
-  id        String   @id @db.Uuid // Must receive the UUID from Supabase Auth (auth.users.id)
-  name      String
-  email     String   @unique
+  id             String  @id @db.Uuid // Must receive the UUID from Supabase Auth (auth.users.id)
+  name           String
+  email          String  @unique
   universityCode String? // UNI student code (at least 1 required per team)
-  phone     String?
-  role      Role      @default(POSTULANTE)
-  isLeader  Boolean  @default(false) // Whether this user is the team leader
+  phone          String?
+  role           Role    @default(POSTULANTE)
+  isLeader       Boolean @default(false) // Whether this user is the team leader
 
   // Team relationship
-  teamId    String?
-  team      Team?    @relation("TeamMembers", fields: [teamId], references: [id], onDelete: SetNull)
+  teamId String?
+  team   Team?   @relation("TeamMembers", fields: [teamId], references: [id], onDelete: SetNull)
 
   // Relationships as Judge
-  evaluationsGiven Evaluation[] @relation("JudgeEvaluations")
+  evaluationsGiven Evaluation[]      @relation("JudgeEvaluations")
+  judgeAssignments JudgeAssignment[] @relation("JudgeAssignments")
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -57,13 +64,14 @@ model User {
 }
 
 model Team {
-  id        String   @id @default(uuid())
-  name      String
+  id   String @id @default(uuid())
+  name String
 
   // Relationships
-  members      User[]        @relation("TeamMembers")
-  deliverables Deliverable[]
-  evaluations  Evaluation[]
+  members          User[]            @relation("TeamMembers")
+  deliverables     Deliverable[]
+  evaluations      Evaluation[]
+  judgeAssignments JudgeAssignment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -76,20 +84,22 @@ model Team {
 // ==========================================
 
 model Deliverable {
-  id          String            @id @default(uuid())
-  title       String
-  fileType    String            // PDF, DOCX, VIDEO, LINK
-  fileUrl     String            // Secure storage path or URL
-  status      DeliverableStatus @default(PENDIENTE)
-
+  id       String            @id @default(uuid())
+  title    String
+  fileType String // PDF, DOCX, VIDEO, LINK
+  fileUrl  String // Secure storage path or URL
+  status   DeliverableStatus @default(PENDIENTE)
 
   // Team relationship
-  teamId      String
-  team        Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
-  uploadedAt  DateTime?
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  uploadedAt   DateTime?
+  reviewStatus DeliverableReview @default(SIN_REVISAR) // RF-38: revisión del admin
+  reviewNotes  String?           @db.Text
+  reviewedAt   DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
 
   @@index([teamId])
   @@map("deliverables")
@@ -100,31 +110,31 @@ model Deliverable {
 // ==========================================
 
 model TimelineEvent {
-  id          String   @id @default(uuid())
+  id          String    @id @default(uuid())
   title       String
-  description String   @db.Text
+  description String    @db.Text
   date        DateTime
   endDate     DateTime?
-  isBootcamp  Boolean  @default(false)
-  order       Int      @default(0)
+  isBootcamp  Boolean   @default(false)
+  order       Int       @default(0)
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("timeline_events")
 }
 
 model Partner {
-  id          String      @id @default(uuid())
-  name        String
-  logoUrl     String
-  type        PartnerType @default(SPONSOR)
-  category    String?     // Gold, Silver, Strategic Ally, etc.
-  websiteUrl  String?
-  order       Int         @default(0)
+  id         String      @id @default(uuid())
+  name       String
+  logoUrl    String
+  type       PartnerType @default(SPONSOR)
+  category   String? // Gold, Silver, Strategic Ally, etc.
+  websiteUrl String?
+  order      Int         @default(0)
 
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("partners")
 }
@@ -134,64 +144,65 @@ model Partner {
 // ==========================================
 
 model Rubric {
-  id          String            @id @default(uuid())
+  id          String  @id @default(uuid())
   title       String
-  description String?           @db.Text
-  isActive    Boolean           @default(true)
+  description String? @db.Text
+  isActive    Boolean @default(true)
 
   // Relationships
   criteria    RubricCriterion[]
   evaluations Evaluation[]
 
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("rubrics")
 }
 
 model RubricCriterion {
-  id          String            @id @default(uuid())
-  rubricId    String
-  rubric      Rubric            @relation(fields: [rubricId], references: [id], onDelete: Cascade)
+  id       String @id @default(uuid())
+  rubricId String
+  rubric   Rubric @relation(fields: [rubricId], references: [id], onDelete: Cascade)
 
   name        String
-  description String?           @db.Text
+  description String? @db.Text
   maxScore    Float
-  order       Int               @default(0)
+  weight      Float   @default(1) // RF-39: peso del criterio en el puntaje final
+  order       Int     @default(0)
 
   // Relationships
-  scores      EvaluationScore[]
+  scores EvaluationScore[]
 
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([rubricId])
   @@map("rubric_criteria")
 }
 
 model Evaluation {
-  id          String            @id @default(uuid())
+  id String @id @default(uuid())
 
   // Judge who evaluates
-  judgeId     String            @db.Uuid
-  judge       User              @relation("JudgeEvaluations", fields: [judgeId], references: [id], onDelete: Cascade)
+  judgeId String @db.Uuid
+  judge   User   @relation("JudgeEvaluations", fields: [judgeId], references: [id], onDelete: Cascade)
 
   // Team being evaluated
-  teamId      String
-  team        Team              @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   // Rubric used
-  rubricId    String
-  rubric      Rubric            @relation(fields: [rubricId], references: [id])
+  rubricId String
+  rubric   Rubric @relation(fields: [rubricId], references: [id])
 
-  feedback    String?           @db.Text
-  isCompleted Boolean           @default(false) // Allows partial save / draft mode
+  feedback    String? @db.Text
+  isCompleted Boolean @default(false) // Allows partial save / draft mode
 
   // Scores per criterion
-  scores      EvaluationScore[]
+  scores EvaluationScore[]
 
-  createdAt   DateTime          @default(now())
-  updatedAt   DateTime          @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([judgeId, teamId, rubricId])
   @@index([judgeId])
@@ -201,18 +212,45 @@ model Evaluation {
 }
 
 model EvaluationScore {
-  id           String          @id @default(uuid())
+  id           String     @id @default(uuid())
   evaluationId String
-  evaluation   Evaluation      @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
 
-  criterionId  String
-  criterion    RubricCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
+  criterionId String
+  criterion   RubricCriterion @relation(fields: [criterionId], references: [id], onDelete: Cascade)
 
-  score        Float
-  comments     String?         @db.Text
+  score    Float
+  comments String? @db.Text
 
   @@unique([evaluationId, criterionId])
   @@index([evaluationId])
   @@index([criterionId])
   @@map("evaluation_scores")
+}
+
+// ==========================================
+// PROPUESTA SPRINT 3 (Issue #11) — revisar con Squad 1
+// ==========================================
+
+// RF-30: equipos que cada jurado tiene asignados.
+model JudgeAssignment {
+  id        String   @id @default(uuid())
+  judgeId   String   @db.Uuid
+  judge     User     @relation("JudgeAssignments", fields: [judgeId], references: [id], onDelete: Cascade)
+  teamId    String
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([judgeId, teamId])
+  @@index([teamId])
+  @@map("judge_assignments")
+}
+
+// RF-06: bloques editables del Home (clave → JSON validado con Zod en el servidor).
+model SiteContent {
+  key       String   @id
+  value     Json
+  updatedAt DateTime @updatedAt
+
+  @@map("site_content")
 }

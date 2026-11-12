@@ -4,84 +4,60 @@ import {
   teamRegistrationSchema,
   TeamRegistrationFormValues,
 } from "@/lib/validations/team-schema";
-import { prisma } from "@/lib/prisma";
+import type { ActionResult } from "@/lib/actions/types";
+import { registerTeam } from "@/lib/registration/team-registration-service";
+import {
+  createPostulanteAuthAdmin,
+  prismaTeamRegistrationStore,
+} from "@/lib/registration/adapters";
 
-export type ActionResult<T = unknown> = {
-  success: boolean;
-  message: string;
-  data?: T;
-  errors?: Record<string, string[]>;
-};
+// Reexportado para no romper imports existentes (Issue #15: contrato movido a lib/actions/types.ts).
+export type { ActionResult };
 
+// Deuda del Sprint 1 saldada en #11: se persiste con el esquema real de Prisma (Team + User),
+// sin `prisma as any` y sin el fallback que respondía éxito sin guardar.
 export async function registerTeamAction(
   rawData: TeamRegistrationFormValues
-): Promise<ActionResult> {
-  try {
-    const validationResult = teamRegistrationSchema.safeParse(rawData);
+): Promise<ActionResult<{ teamId: string; teamName: string }>> {
+  const validationResult = teamRegistrationSchema.safeParse(rawData);
 
-    if (!validationResult.success) {
-      const formattedErrors = validationResult.error.flatten().fieldErrors;
-      return {
-        success: false,
-        message: "Error de validación en los datos enviados",
-        errors: formattedErrors as Record<string, string[]>,
-      };
-    }
-
-    const data = validationResult.data;
-
-    let createdRecord;
-
-    try {
-      if ("team" in prisma && typeof (prisma as any).team?.create === "function") {
-        createdRecord = await (prisma as any).team.create({
-          data: {
-            name: data.teamName || `Equipo de ${data.members[0].fullName}`,
-            type: data.registrationType,
-            members: {
-              create: data.members.map((m) => ({
-                fullName: m.fullName,
-                email: m.email,
-                universityCode: m.universityCode,
-                phone: m.phone,
-              })),
-            },
-          },
-          include: {
-            members: true,
-          },
-        });
-      } else {
-        createdRecord = {
-          id: `temp_${Date.now()}`,
-          name: data.teamName || `Equipo de ${data.members[0].fullName}`,
-          type: data.registrationType,
-          membersCount: data.members.length,
-          createdAt: new Date().toISOString(),
-        };
-      }
-    } catch (dbError: any) {
-      if (dbError.code === "P2002") {
-        return {
-          success: false,
-          message: "Uno de los correos o códigos ya se encuentra registrado.",
-        };
-      }
-      console.error("[REGISTER_TEAM_DB_ERROR]:", dbError);
-      return {
-        success: false,
-        message: "Ocurrió un inconveniente al guardar la postulación en la base de datos.",
-      };
-    }
+  if (!validationResult.success) {
+    const formattedErrors = validationResult.error.flatten().fieldErrors;
     return {
-      success: true,
-      message:
-        data.registrationType === "TEAM"
-          ? `¡El equipo "${data.teamName}" se ha registrado exitosamente!`
-          : "¡Tu inscripción individual ha sido registrada con éxito!",
-      data: createdRecord,
+      success: false,
+      message: "Error de validación en los datos enviados",
+      errors: formattedErrors as Record<string, string[]>,
     };
+  }
+
+  const data = validationResult.data;
+
+  try {
+    const result = await registerTeam(data, prismaTeamRegistrationStore, createPostulanteAuthAdmin());
+
+    if (result.ok) {
+      return {
+        success: true,
+        message:
+          data.registrationType === "TEAM"
+            ? `¡El equipo "${result.teamName}" se ha registrado exitosamente!`
+            : "¡Tu inscripción individual ha sido registrada con éxito!",
+        data: { teamId: result.teamId, teamName: result.teamName },
+      };
+    }
+
+    const messages = {
+      DUPLICATE: "Uno de los correos ya se encuentra registrado.",
+      UNAVAILABLE: "El servicio no está disponible en este momento. Inténtalo más tarde.",
+      ROLLED_BACK: "No se completó la inscripción y no se guardó ningún dato. Inténtalo nuevamente.",
+      RECONCILIATION_REQUIRED:
+        "No pudimos confirmar tu inscripción. No vuelvas a enviarla: escríbenos para revisarla.",
+    };
+    if (result.code === "RECONCILIATION_REQUIRED") console.error("[REGISTER_TEAM_RECONCILIATION_REQUIRED]");
+    // Mensaje genérico: no se indica qué correo existe (evita enumeración de cuentas).
+    return { success: false, message: messages[result.code] };
   } catch (error) {
+    // Configuración faltante (p. ej. SUPABASE_SERVICE_ROLE_KEY): no se creó nada.
     console.error("[REGISTER_TEAM_ACTION_ERROR]:", error);
     return {
       success: false,

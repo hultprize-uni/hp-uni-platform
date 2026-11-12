@@ -45,7 +45,7 @@ const defaultValues: TeamRegistrationFormValues = {
 const memberFields = [
   { name: "fullName", label: "Nombre completo", type: "text", autoComplete: "name", placeholder: "Ana Torres Quispe" },
   { name: "email", label: "Correo electrónico", type: "email", autoComplete: "email", placeholder: "ana.torres@uni.pe" },
-  { name: "universityCode", label: "Código o universidad", type: "text", autoComplete: "off", placeholder: "20231234A o UNI" },
+  { name: "universityCode", label: "Código UNI (opcional)", type: "text", autoComplete: "off", placeholder: "20231234A" },
   { name: "phone", label: "Celular", type: "tel", autoComplete: "tel", placeholder: "987654321" },
 ] as const;
 
@@ -176,7 +176,7 @@ export function RegisterTeamForm() {
           </CardTitle>
           <CardDescription>
             Al menos un integrante debe ser de la UNI: con correo @uni.pe o @uni.edu.pe, o
-            indicando su código o universidad UNI.
+            con su código de alumno UNI.
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
