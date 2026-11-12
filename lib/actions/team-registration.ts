@@ -6,12 +6,10 @@ import {
 } from "@/lib/validations/team-schema";
 import { prisma } from "@/lib/prisma";
 
-export type ActionResult<T = unknown> = {
-  success: boolean;
-  message: string;
-  data?: T;
-  errors?: Record<string, string[]>;
-};
+import type { ActionResult } from "@/lib/actions/types";
+
+// Reexportado para no romper imports existentes (Issue #15: contrato movido a lib/actions/types.ts).
+export type { ActionResult };
 
 export async function registerTeamAction(
   rawData: TeamRegistrationFormValues

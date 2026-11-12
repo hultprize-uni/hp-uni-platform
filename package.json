@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "test:auth": "node --test tests/auth.test.mjs",
     "test:auth:http": "node tests/auth-http.mjs",
-    "test:auth:browser": "node tests/auth-browser.mjs"
+    "test:auth:browser": "node tests/auth-browser.mjs",
+    "test:deliverables": "node --test tests/deliverables.test.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",
