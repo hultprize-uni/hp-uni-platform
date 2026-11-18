@@ -61,4 +61,5 @@ La migración SQL se generó con `prisma migrate diff` y **no se aplicó a ningu
 
 ## Verificación
 - `npm run test:cms` → 15/15 pruebas.
-- `npm run typecheck`, `npm run lint` y `npm run build`: correr tras `npm install`.
+- `npm run test:auth` → 27/27 (no se rompió nada de Auth).
+- `npm run typecheck`, `npm run lint` y `npm run build` → sin errores.
