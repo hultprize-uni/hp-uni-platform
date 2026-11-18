@@ -49,4 +49,6 @@ Cuando esas ramas entren a `dev`, el diff del PR se reduce solo a los archivos d
 
 ## Verificación
 - `npm run test:deliverables` → 8/8 pruebas.
-- `npm run typecheck`, `npm run lint` y `npm run build`: correr tras `npm install` (ver la guía de presentación).
+- `npm run test:auth` → 27/27 (no se rompió nada de Auth).
+- `npm run typecheck` y `npm run build` → sin errores.
+- `npm run lint` → solo los 3 `any` heredados de `lib/actions/team-registration.ts` (Sprint 1). Su corrección es parte del Issue `#11` y ya está hecha en la rama del Sprint 3 (`feature/cms-evaluations`).
