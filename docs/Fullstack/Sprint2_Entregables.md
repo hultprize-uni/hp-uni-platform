@@ -4,7 +4,7 @@
 **Integrantes:** Leonel Cruzado, Adriano Navarro
 **Rama:** `feature/deliverables-upload`
 **Requerimientos:** `RF-24`, `RF-25`, `RF-26`, `RNF-03`
-**Estado:** listo para revisión del líder del squad (aún sin PR).
+**Estado:** listo para revisión del líder del squad (Ya se subirá el PR).
 
 ---
 
@@ -22,6 +22,10 @@ Cuando esas ramas entren a `dev`, el diff del PR se reduce solo a los archivos d
 | `lib/deliverables/rules.ts` | Reglas puras: entregables configurados, validación de archivo y enlace, plazo, rutas de Storage. |
 | `lib/supabase/storage.ts` | Cliente de Storage solo servidor (subir, borrar, URL firmada). |
 | `lib/actions/types.ts` | Contrato `ActionResult` compartido (pedido en Issue `#15`). |
+| `app/portal/layout.tsx` | Layout protegido para postulantes (`requireRole("POSTULANTE")`) con encabezado y navegación. |
+| `app/portal/entregables/page.tsx` | Server Component que precarga el estado del equipo y renderiza el portal. |
+| `components/deliverables/deliverables-dashboard.tsx` | Dashboard con barra de progreso, alertas de estado y manejo de acciones. |
+| `components/deliverables/deliverable-card.tsx` | Tarjeta con validación de archivos en cliente (máx 10 MB), drag & drop, enlaces y reemplazo. |
 | `tests/deliverables.test.mjs` | 8 pruebas de las reglas (`npm run test:deliverables`). |
 | `next.config.ts` | `serverActions.bodySizeLimit = "11mb"` (el límite por defecto es 1 MB). |
 
@@ -44,7 +48,7 @@ Cuando esas ramas entren a `dev`, el diff del PR se reduce solo a los archivos d
 ## Pendientes para revisar con el líder
 - **Lista de entregables:** `DELIVERABLE_SLOTS` en `lib/deliverables/rules.ts` es una propuesta (Resumen ejecutivo, Pitch deck, Video pitch). Hay que confirmar los títulos y formatos reales.
 - **Esquema (Squad 1):** sugerir `@@unique([teamId, title])` en `Deliverable` para evitar duplicados si dos integrantes suben a la vez.
-- **Frontend:** la vista del portal del postulante consume estas acciones; no está en este issue (`[BACK]`).
+- **Frontend:** vista completada en `/portal/entregables` consumiendo `getMyDeliverablesAction` y `uploadDeliverableAction` con badges de estado, vista previa vía URL firmada y formulario de carga/reemplazo interactivo.
 - Los estados "válido / observado" del admin corresponden al Sprint 3 (`RF-38`, Issue `#11`).
 
 ## Verificación
