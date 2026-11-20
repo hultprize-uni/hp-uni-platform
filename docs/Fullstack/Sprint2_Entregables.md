@@ -4,7 +4,7 @@
 **Integrantes:** Leonel Cruzado, Adriano Navarro
 **Rama:** `feature/deliverables-upload`
 **Requerimientos:** `RF-24`, `RF-25`, `RF-26`, `RNF-03`
-**Estado:** listo para revisión del líder del squad (Ya se subirá el PR).
+**Estado:** listo para revisión del líder del squad (Se subirá el PR).
 
 ---
 
