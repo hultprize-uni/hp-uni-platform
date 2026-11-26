@@ -38,6 +38,11 @@ yarn-error.log*
 .env.production
 !.env.example
 
+# configuración local de asistentes de IA (no versionar)
+.claude/
+.agents/
+skills-lock.json
+
 # vercel
 .vercel
 
